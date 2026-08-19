@@ -14,7 +14,7 @@
 
 ## 🚀 Try It Live
 You can test the app directly in your browser via GitHub Pages:
-🔗 [Click here to open Plant Care](https://edotropico.github.io/YOUR-REPO-NAME)
+🔗 [Click here to open Plant Care](https://edotropico.github.io/plant-care-companion)
 
 ## 🛠️ Tech Stack
 * HTML5 / CSS3 / JavaScript (Vanilla)
