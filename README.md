@@ -25,3 +25,8 @@ This is a personal open-source project. If you have ideas, suggestions, or want 
 
 ## 📄 License
 Distributed under the MIT License. See the `LICENSE` file for more information.
+
+### ☕ Support the Project
+If this app helps you keep your plants alive, consider supporting its development:
+* ☕ [Buy Me a Coffee](https://www.buymeacoffee.com/edotropico)
+* 💳 [Revolut](https://revolut.me/edotropico)
