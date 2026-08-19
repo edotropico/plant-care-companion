@@ -1,5 +1,7 @@
 # 🌿 Plant Care PWA
 
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-Donate-yellow?logo=buymeacoffee&logoColor=white)](https://www.buymeacoffee.com/edotropico)
+
 > An elegant, lightweight Progressive Web App designed for the daily care of indoor plants, built with a strong focus on UI/UX and practicality.
 
 ![Dark Theme](https://img.shields.io/badge/Theme-Dark%20%2316241F-green)
@@ -28,5 +30,6 @@ Distributed under the MIT License. See the `LICENSE` file for more information.
 
 ### ☕ Support the Project
 If this app helps you keep your plants alive, consider supporting its development:
+
 * ☕ [Buy Me a Coffee](https://www.buymeacoffee.com/edotropico)
 * 💳 [Revolut](https://revolut.me/edotropico)
