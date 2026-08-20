@@ -77,4 +77,4 @@ If this app helps you keep your plants alive, consider supporting its developmen
 
 ---
 
-Made by **Edoardo Giangrandi**.
+Made by **edotropico**.
