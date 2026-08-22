@@ -1,82 +1,82 @@
 # Plant Care Companion
 
-Progressive Web App per la cura delle piante d'appartamento. Tiene il ritmo di
-annaffiature, concime e trattamenti, conta le foglie nuove e quelle perse, e da
-quei dati ricava una diagnosi invece di limitarsi a ricordarti le scadenze.
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-Donate-yellow?logo=buymeacoffee&logoColor=white)](https://www.buymeacoffee.com/edotropico)
 
-Funziona senza rete, si installa sulla schermata Home e non manda niente a
-nessun server: tutto resta nel telefono.
+> Progressive Web App for indoor plant care. Tracks watering, fertilizing, and treatments, counts new and lost leaves, and uses this data to provide a diagnosis rather than just reminding you of deadlines.
 
-## Cosa fa
+![PWA Ready](https://img.shields.io/badge/PWA-Ready-blue)
+![Offline First](https://img.shields.io/badge/Offline-First-green)
+![No Tracking](https://img.shields.io/badge/Tracking-None-lightgrey)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-- **Ritmi calibrati sulla realtà**: confronta l'intervallo che hai impostato con
-  quello che segui davvero, e ti propone di correggerlo.
-- **Diagnosi guidata**: si parte da quello che vedi — sulle foglie, sul
-  terriccio, sul fusto — e in due o tre tocchi si arriva alla causa probabile,
-  fra diciannove problemi divisi per categoria.
-- **Bilancio fogliare**: foglie nuove contro foglie perse, con il tipo di
-  perdita (morta, secca, ingiallita) incrociato col tuo ritmo di annaffiatura.
-- **Guide**: undici ricette di substrato, otto tipi d'acqua, venticinque schede
-  botaniche con famiglia, origine e tossicità.
-- **Libretto per chi ti annaffia**: istruzioni giorno per giorno da stampare
-  quando parti.
-- **Storico**: calendario del mese, linee del tempo delle foglie, previsione
-  della prossima.
-- Italiano e inglese, tema chiaro e scuro, centoquindici distintivi.
+Functions entirely offline, installs to the Home screen, and is optimized for smartphone use by managing data storage locally. No data is sent to external servers.
 
-## Struttura
+## Live Demo
 
-```
+[Open Plant Care](https://edotropico.github.io/plant-care-companion)
+
+## Features
+
+- **Reality-calibrated rhythms**: compares the set interval with your actual habits and suggests corrections.
+- **Guided diagnosis**: input visual symptoms — on leaves, soil, or stem — to identify probable causes across 19 problem categories.
+- **Leaf balance**: compares new leaves against lost leaves, cross-referencing the type of loss (dead, dried, yellowed) with the watering rhythm.
+- **Reference guides**: 11 soil mix recipes, 8 water types, 25 botanical profiles detailing family, origin, and toxicity.
+- **Plant-sitter booklet**: printable day-by-day instructions for absences.
+- **History**: monthly calendar, leaf timelines, and next leaf prediction.
+- English and Italian localization, light and dark themes, 115 badges.
+
+## Data Storage
+
+Data is stored in the browser's `localStorage` under the `cura-piante:v2` key. No accounts or network calls are utilized. Use More -> Save a copy to export all data to a JSON file, which can be restored via the Restore function.
+
+## Structure
+
 .
-├── index.html          pagina unica: metadati PWA, guscio, schermata di avvio
-├── manifest.json       nome, icone, colori, modalità a schermo intero
-├── sw.js               service worker: l'app si apre anche senza rete
+├── index.html          single page: PWA metadata, shell, splash screen
+├── manifest.json       name, icons, colors, full screen mode
+├── sw.js               service worker: enables offline access
 ├── css/
-│   └── style.css       tutto il foglio di stile
+│   └── style.css       main stylesheet
 ├── js/
-│   └── app.js          pacchetto compilato (generato, non si modifica a mano)
+│   └── app.js          compiled bundle (generated, do not edit manually)
 ├── src/
-│   ├── app.jsx         il sorgente vero: componenti, dati botanici, logica
-│   └── index.jsx       punto d'ingresso, registra il service worker
+│   ├── app.jsx         source code: components, botanical data, logic
+│   └── index.jsx       entry point, service worker registration
 └── icons/
-    ├── icon-192.png    icona per Android e per il manifest
-    ├── icon-512.png    icona grande, anche in versione maskable
+    ├── icon-192.png    Android and manifest icon
+    ├── icon-512.png    large icon, maskable version included
     ├── apple-touch-icon-180.png
-    └── splash/         schermate di avvio per gli iPhone recenti
-```
+    └── splash/         splash screens for iOS devices
 
-## Come si sviluppa
+## Development
 
-```bash
 npm install
-npm run dev      # ricompila a ogni salvataggio
-npm run serve    # apre su http://localhost:8080
-```
+npm run dev      # recompile on save
+npm run serve    # open on http://localhost:8080
 
-Si modifica `src/app.jsx` e `css/style.css`. Il file `js/app.js` è generato:
-va rigenerato con `npm run build` **prima di ogni commit**, altrimenti online
-finisce una versione diversa da quella del sorgente.
+Modifications are made in `src/app.jsx` and `css/style.css`. The `js/app.js` file is generated. Rebuild with `npm run build` **before every commit** to prevent discrepancies between the source and the online version.
 
-## Come si pubblica
+## Deployment
 
-Su GitHub Pages: impostazioni del repository, sezione Pages, sorgente
-`main` e cartella `/root`. Serve HTTPS perché il service worker funzioni, e
-GitHub Pages ce l'ha già.
+GitHub Pages: Access repository settings, Pages section, select `main` source and `/root` folder. HTTPS is required for the service worker, which is provided by GitHub Pages.
 
-Su iPhone: si apre l'indirizzo in Safari, poi Condividi → Aggiungi alla
-schermata Home.
+iPhone: Open the URL in Safari, select Share -> Add to Home Screen.
 
-## Dove finiscono i dati
+## Contributing
 
-Nel `localStorage` del browser, sotto la chiave `cura-piante:v2`. Non c'è
-nessun account e nessuna chiamata di rete. Da Altro → Salva copia si esporta
-tutto in un file JSON, che si rimette da Ripristina.
+Personal open-source project. Ideas, suggestions, and bug reports are accepted via Issues or Pull Requests.
 
-## Licenza
+## License
 
-MIT — vedi [LICENSE](LICENSE).
-Le illustrazioni SVG delle piante sono originali e ricadono nella stessa licenza.
+MIT — see [LICENSE](LICENSE). Original SVG plant illustrations are subject to the same license.
+
+### Support the project
+
+If this application assists in maintaining your plants, consider supporting its development:
+
+* [Buy Me a Coffee](https://www.buymeacoffee.com/edotropico)
+* [Revolut](https://revolut.me/edotropico)
 
 ---
 
-Fatto da **Edoardo Giangrandi**.
+Developed by **edotropico**.
