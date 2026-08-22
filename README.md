@@ -79,4 +79,4 @@ If this application assists in maintaining your plants, consider supporting its 
 
 ---
 
-Developed by **edotropico**.
+Developed by **Edoardo Giangrandi** (edotropico).
