@@ -378,6 +378,7 @@
 .cp-stat { font-size:11.5px; color:var(--tenue); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
 .cp-stat b { font-weight:600; color:var(--foglia); }
 .cp-mini { border:1px solid var(--linea); background:var(--pieno); border-radius:999px; padding:3px 11px; font:inherit; font-size:12px; cursor:pointer; color:var(--foglia); }
+.cp-mini-perdita { border-color:var(--secco); color:var(--secco); }
 .cp-mini:hover { border-color:var(--acqua); color:var(--acqua); }
 .cp-gruppo { margin-bottom:26px; }
 .cp-stanza-titolo { font-family:'Fraunces',ui-serif,Georgia,serif; font-size:20px; font-weight:600; margin:0 0 10px; display:flex; align-items:baseline; justify-content:space-between; gap:10px; padding-bottom:6px; border-bottom:1px solid var(--linea); }
@@ -398,7 +399,6 @@
 .cp-scheda.ristretta .cp-corpo { padding:12px 14px 12px 6px; }
 .cp-scheda.ristretta .cp-azioni { margin-top:9px; }
 
-/* graphs*/
 .cp-grafici { display:flex; flex-direction:column; gap:24px; }
 .cp-totali { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; }
 @media (min-width:560px){ .cp-totali { grid-template-columns:repeat(4,1fr); } }

@@ -4,7 +4,6 @@ import App from "./app.jsx";
 
 createRoot(document.getElementById("radice")).render(<App />);
 
-/* quando finisce di montare *winkwink* toglie la schermata di react */
 requestAnimationFrame(() => {
   const avvio = document.getElementById("avvio");
   if (avvio) { avvio.classList.add("via"); setTimeout(() => avvio.remove(), 500); }

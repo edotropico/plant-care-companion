@@ -10,9 +10,15 @@
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 
+import { BOTANICA, EN_BOTANICA, BOT_PIU } from "./dati/botanica.js";
+import { PROBLEMI, EN_PROBLEMI } from "./dati/problemi.js";
+import { MISCELE, EN_MISCELE, ACQUE, EN_ACQUE } from "./dati/guide.js";
+import { SPECIE, PROFILI, EN_PROFILI, VASI, CANDIDATE } from "./dati/specie.js";
 const BASE1 = "#2E5545", BASE2 = "#4C7A63", BASE3 = "#89AF97", CO = "#8A6A4A", AC = "#8FBECF", VE = "var(--scheda)";
 
 const TINTE = {
+  alocasia: ["#0E2415", "#183B22", "#4E7357"],     // amazonica: quasi nera davvero
+
   marantacee: ["#2C5A52", "#468A78", "#84B3A2"],   // più fredde
   sansevierie: ["#3B4F3F", "#5C7460", "#93A894"],  // grigio-verdi
   anthurium: ["#16311F", "#2B4A32", "#6E8F74"],    // quasi nere
@@ -23,7 +29,7 @@ const TINTE = {
 const FAMIGLIA = {
   maranta: "marantacee", calathea: "marantacee", fittonia: "marantacee",
   snake: "sansevierie", "snake-intrecciata": "sansevierie",
-  "anthurium-regale": "anthurium", "anthurium-serra": "anthurium", polly: "anthurium", alocasia: "anthurium",
+  "anthurium-regale": "anthurium", "anthurium-serra": "anthurium", polly: "alocasia", alocasia: "alocasia",
   raindrop: "succulente", peperomia: "succulente",
   felce: "felci", palma: "felci", "felce-montagna": "felci", sedum: "grasse",
 };
@@ -44,7 +50,7 @@ function Illustrazione({ tipo, stadio = "adulta" }) {
             <path d="M32 16l-11 7M32 16l11 7M32 28l-13 8M32 28l13 8M32 40l-10 7M32 40l10 7" stroke={F1} strokeWidth="1" opacity=".6" />
           ) : (
             <>
-              {}
+              {/* fenditure dal margine: compaiono con l'età adulta */}
               {[[0.30, 7], [0.50, 7], [0.70, 7.5]].map(([t, prof], k) => [1, -1].map((l) => {
                 const y = 12 + t * 42;
                 return <path key={`${k}${l}`} d={`M${32 + l * 25} ${y} L${32 + l * prof} ${y - 2.5}`}
@@ -79,7 +85,7 @@ function Illustrazione({ tipo, stadio = "adulta" }) {
           {quante([[16, 1, F2], [32, -1, F3], [46, 1, F2]]).map(([y, l, c], i) => (
             <g key={i} transform={l === 1 ? undefined : "translate(64,0) scale(-1,1)"}>
               <path d={`M30 ${y}c-9 1-16 8-15 16 6 3 15-1 18-8 1-4 0-7-3-8z`} fill={c} />
-              {}
+              {/* la variegatura mint: settori verde chiaro, non bianchi */}
               <path d={`M27 ${y + 3}c-6 2-10 6-10 11 4 2 9-1 11-6 1-2 1-4-1-5z`} fill="#AFD6A4" />
               {!giovane && <ellipse cx="21" cy={y + 9} rx="3.4" ry="2" fill={VE} transform={`rotate(-20 21 ${y + 9})`} />}
               {matura && <ellipse cx="26" cy={y + 4} rx="2.4" ry="1.5" fill={VE} transform={`rotate(-20 26 ${y + 4})`} />}
@@ -93,7 +99,7 @@ function Illustrazione({ tipo, stadio = "adulta" }) {
           <path d="M32 60V44" stroke={CO} strokeWidth="3" strokeLinecap="round" />
           {quante([[-1, 1, F1], [1, 1, F1], [-1, 0.78, F2], [1, 0.78, F2], [0, 0.92, F1]]).map(([lato, sc, c], i) => (
             <g key={i} transform={`translate(32,44) scale(${lato === 0 ? 1 : lato * sc},${sc})`}>
-              {}
+              {/* rachide arcuata verso l'esterno, come una vera Kentia */}
               <path d="M0 0C0 -18 6 -30 18 -36" stroke={c} strokeWidth="1.6" fill="none" strokeLinecap="round" />
               {[0.18, 0.36, 0.54, 0.72, 0.9].map((t, k) => {
                 const x = 18 * t * t * (3 - 2 * t) * 1.05;
@@ -348,36 +354,6 @@ function Illustrazione({ tipo, stadio = "adulta" }) {
   }
 }
 
-/* ================================================================== */
-const SPECIE = [
-  { nome: "Monstera deliciosa", giorni: 8, luce: "Luce indiretta brillante", ill: "deliciosa" },
-  { nome: "Monstera adansonii", giorni: 7, luce: "Luce indiretta brillante", ill: "adansonii" },
-  { nome: "Monstera adansonii Mint (variegata)", giorni: 9, luce: "Luce indiretta brillante", ill: "adansonii-solo" },
-  { nome: "Howea forsteriana (kentia)", giorni: 9, luce: "Luce indiretta", ill: "palma" },
-  { nome: "Epipremnum aureum (pothos)", giorni: 8, luce: "Tollera la penombra", ill: "pothos" },
-  { nome: "Alocasia", giorni: 7, luce: "Luce indiretta brillante", ill: "alocasia" },
-  { nome: "Alocasia amazonica (Polly)", giorni: 6, luce: "Luce indiretta brillante", ill: "polly" },
-  { nome: "Anthurium regale", giorni: 6, luce: "Luce indiretta brillante", ill: "anthurium-regale" },
-  { nome: "Anthurium warocqueanum", giorni: 5, luce: "Luce indiretta brillante", ill: "anthurium-serra" },
-  { nome: "Hypoestes (polka dot)", giorni: 3, luce: "Luce indiretta brillante", ill: "polkadot" },
-  { nome: "Peperomia polybotrya (raindrop)", giorni: 13, luce: "Luce indiretta brillante", ill: "raindrop" },
-  { nome: "Peperomia obtusifolia", giorni: 12, luce: "Luce indiretta", ill: "peperomia" },
-  { nome: "Maranta leuconeura", giorni: 4, luce: "Luce indiretta", ill: "maranta" },
-  { nome: "Calathea", giorni: 5, luce: "Luce indiretta", ill: "calathea" },
-  { nome: "Fittonia albivenis", giorni: 3, luce: "Luce indiretta", ill: "fittonia" },
-  { nome: "Chlorophytum (spider plant)", giorni: 6, luce: "Luce indiretta brillante", ill: "spider" },
-  { nome: "Sansevieria (snake plant)", giorni: 21, luce: "Qualsiasi luce", ill: "snake" },
-  { nome: "Sansevieria intrecciata", giorni: 21, luce: "Qualsiasi luce", ill: "snake-intrecciata" },
-  { nome: "Felce", giorni: 4, luce: "Luce indiretta", ill: "felce" },
-  { nome: "Phlebodium aureum (felce blu)", giorni: 6, luce: "Luce indiretta brillante", ill: "felce-blu" },
-  { nome: "Felce rustica da esterno", giorni: 4, luce: "Luce indiretta", ill: "felce-montagna" },
-  { nome: "Sedum nussbaumerianum", giorni: 18, luce: "Sole diretto", ill: "sedum" },
-  { nome: "Hedera helix (edera)", giorni: 6, luce: "Luce indiretta", ill: "edera-acqua" },
-  { nome: "Pilea peperomioides", giorni: 8, luce: "Luce indiretta brillante", ill: "pilea-acqua" },
-  { nome: "Philodendron", giorni: 8, luce: "Tollera la penombra", ill: "pothos" },
-  { nome: "Spathiphyllum (spatifillo)", giorni: 5, luce: "Luce indiretta", ill: "spatifillo" },
-  { nome: "Altro", giorni: 7, luce: "", ill: "generica" },
-];
 const LUCI = ["Sole diretto", "Luce brillante", "Luce indiretta brillante", "Luce indiretta", "Tollera la penombra"];
 const TAG = { forte: "va forte", ripresa: "in ripresa", cura: "in sofferenza", nuovo: "da capire" };
 
@@ -394,21 +370,18 @@ const CONCIME = {
 };
 const concimeDi = (specie) => CONCIME[specie] || 28;
 
-
-const SEME = [];  
+const SEME = [];   // si parte da zero: le piante le aggiungi tu
 
 const STANZE_BASE = ["Salotto", "Camera", "Bagno", "Cucina", "Studio", "Corridoio", "Balcone"];
 
-
 const specieBreve = (s) => (s || "").replace(/\s*\(.*\)\s*/, "").trim();
-
 
 const oggiStr = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 };
 const parseData = (s) => {
-  if (typeof s !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return new Date();
+  if (typeof s !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return new Date();  // data mancante o storta: oggi
   const [y, m, d] = s.split("-").map(Number);
   const t = new Date(y, m - 1, d);
   return Number.isNaN(t.getTime()) ? new Date() : t;
@@ -443,11 +416,11 @@ const crescita = (foglie) => {
   let ogni = null, prossima = null, finestra = null;
   if (salti.length >= 1 && distinte.length >= 2) {
     const ord = [...salti].sort((a, b) => a - b);
-    ogni = ord.length % 2 ? ord[(ord.length - 1) / 2]           
+    ogni = ord.length % 2 ? ord[(ord.length - 1) / 2]            // mediana: regge un ritardo isolato
       : Math.round((ord[ord.length / 2 - 1] + ord[ord.length / 2]) / 2);
     if (ogni >= 5) {
       const ultima = distinte[distinte.length - 1];
-      prossima = ogni - giorniDa(ultima);                       
+      prossima = ogni - giorniDa(ultima);                        // giorni da oggi, può essere negativo
       const scarto = salti.length > 1
         ? Math.round(Math.sqrt(salti.reduce((a, x) => a + (x - ogni) ** 2, 0) / salti.length))
         : Math.round(ogni * 0.3);
@@ -456,7 +429,6 @@ const crescita = (foglie) => {
   }
   return { totale: foglie.length, recenti, ogni, prossima, finestra, sicurezza: salti.length };
 };
-
 
 const cureDi = (p, stagione) => {
   const out = [];
@@ -498,7 +470,6 @@ const cureDi = (p, stagione) => {
 
   return out;
 };
-
 
 const ultimaAzione = (p) => {
   const tutte = [...(p.storico || []), ...(p.foglie || []), ...(p.storicoTrattamenti || []), ...(p.storicoConcime || [])];
@@ -560,7 +531,7 @@ const messaggiDi = (p, stagione, en = false) => {
                            : `${g30("secca")} foglie secche questo mese: di solito è aria secca o calcare, non sete.`);
   }
 
-  if (p.altezzaPalo && p.altezzaPianta && Number(p.altezzaPianta) >= Number(p.altezzaPalo) - 12)
+  if (p.altezzaPalo && p.altezzaPianta && Number(p.altezzaPianta) >= Number(p.altezzaPalo) * 0.88)
     agg(72, "attesa", en ? `It has nearly reached the top of the pole (${p.altezzaPianta} of ${p.altezzaPalo} cm): extend it or it will have to trail.` : `È arrivata quasi in cima al palo (${p.altezzaPianta} su ${p.altezzaPalo} cm): prolungalo o dovrà ricadere.`);
 
   if (p.sostegno === "palo-cocco" && p.restanti <= 0)
@@ -593,65 +564,6 @@ const messaggiDi = (p, stagione, en = false) => {
   agg(1, "neutro", daAzione !== null && daAzione < 7 ? (en ? "Nothing to do, it is fine." : "Niente da fare, è a posto.") : (en ? "All quiet here." : "Tutto tranquillo da queste parti."));
 
   return m.sort((a, b) => b.pri - a.pri);
-};
-
-
-const MISCELE = {
-  "aroidee-epifite": {
-    titolo: "Aroidee epifite",
-    parti: ["50% corteccia di pino fine", "20% perlite", "20% sfagno", "10% carbone vegetale"],
-    perche: "Radici aeree abituate ad aggrapparsi alla corteccia degli alberi: vogliono aria fra le radici, non terra. Il terriccio universale qui è la causa più comune di stallo.",
-  },
-  "aroidee-terrestri": {
-    titolo: "Aroidee da terra",
-    parti: ["40% terriccio universale", "30% corteccia fine", "20% perlite", "10% lapillo o carbone"],
-    perche: "Vogliono un composto ricco ma che resti soffice: la corteccia crea i vuoti d'aria, la perlite impedisce che si compatti.",
-  },
-  "marantacee": {
-    titolo: "Marantacee",
-    parti: ["50% fibra di cocco o torba", "30% perlite", "20% corteccia fine"],
-    perche: "Substrato acido che resta umido senza diventare fango. Non deve mai asciugare del tutto, ma nemmeno ristagnare.",
-  },
-  "peperomie": {
-    titolo: "Peperomie",
-    parti: ["40% terriccio universale", "40% perlite o pomice", "20% corteccia fine"],
-    perche: "Foglie carnose che l'acqua se la tengono da sole: le radici devono asciugare in fretta. Stare strette nel vaso va benissimo.",
-  },
-  "sansevierie": {
-    titolo: "Sansevierie",
-    parti: ["60% terriccio per cactus", "40% pomice o lapillo"],
-    perche: "Il substrato più drenante di tutti. Se resta umido più di qualche giorno, il rizoma marcisce dal basso senza dare segnali.",
-  },
-  "palme": {
-    titolo: "Palme",
-    parti: ["60% terriccio universale", "20% pomice o sabbia grossa", "20% corteccia"],
-    perche: "Deve trattenere umidità in profondità senza compattarsi: è l'unica del gruppo che non gradisce di asciugare del tutto.",
-  },
-  "felci": {
-    titolo: "Felci",
-    parti: ["50% terriccio universale", "30% fibra di cocco", "20% perlite"],
-    perche: "Umido e leggero. Le radici sono fini e superficiali: un composto pesante le soffoca in fretta.",
-  },
-  "facili": {
-    titolo: "Generico da appartamento",
-    parti: ["70% terriccio universale", "30% perlite"],
-    perche: "Per le piante che non fanno storie. La perlite serve comunque: il terriccio da solo si compatta dopo pochi mesi.",
-  },
-  "grasse": {
-    titolo: "Piante grasse",
-    parti: ["50% terriccio per cactus", "30% pomice o lapillo", "20% sabbia grossa"],
-    perche: "Deve asciugare in due o tre giorni. Le rosette marciscono dal colletto, quindi meglio finire con uno strato di lapillo in superficie per tenere le foglie sollevate dal bagnato.",
-  },
-  "felci-epifite": {
-    titolo: "Felci epifite",
-    parti: ["40% corteccia fine", "30% fibra di cocco", "20% perlite", "10% sfagno"],
-    perche: "Il Phlebodium in natura cresce sui tronchi, non nella terra: il rizoma peloso deve restare in superficie, mai interrato, o marcisce.",
-  },
-  "acqua": {
-    titolo: "Ancora in acqua",
-    parti: ["Nessun substrato per ora"],
-    perche: "Quando le radici arrivano a 4-5 cm, primo invaso in un vaso piccolo con la miscela adatta alla specie. Più tardi si aspetta, peggio si adattano.",
-  },
 };
 
 function Glifo({ nome }) {
@@ -828,7 +740,6 @@ const DISTINTIVI = [
   { id: "curioso", ic: "bussola", t: "Esploratore", segreto: true, d: "Aver visitato Storico, Terricci e il profilo", m: 3, v: (x) => x.esplorate },
 ];
 
-
 const NOTE_MESE = [
   "Il mese più buio dell'anno: acqua ridotta al minimo, niente concime, e occhio all'aria secca dei termosifoni.",
   "La luce comincia a tornare ma le piante dormono ancora. Buon momento per procurarti corteccia, perlite e vasi in vista di marzo.",
@@ -851,7 +762,6 @@ const MOTIVI = {
   altro: "Altro",
 };
 
-
 function vibra(intensita = "breve") {
   try {
     if (navigator.vibrate) { navigator.vibrate(intensita === "forte" ? [12, 30, 18] : 10); return; }
@@ -859,50 +769,6 @@ function vibra(intensita = "breve") {
     if (scatto) { scatto.checked = !scatto.checked; scatto.dispatchEvent(new Event("change")); }
   } catch { /* niente vibrazione: pazienza */ }
 }
-
-
-const ACQUE = [
-  { id: "rubinetto", t: "Rubinetto", costo: "gratis",
-    come: "Direttamente dal lavandino.",
-    risolve: "Va benissimo per la maggior parte delle piante d'appartamento.",
-    problema: "Se la tua zona ha acqua dura, lascia depositi di calcare e con gli anni alza il pH del terriccio.", },
-
-  { id: "riposata", t: "Riposata una notte", costo: "gratis",
-    come: "Riempi una brocca aperta e lasciala fuori 12-24 ore prima di usarla.",
-    risolve: "Il cloro evapora e l'acqua arriva a temperatura ambiente, il che evita lo shock alle radici.",
-    problema: "Non toglie il calcare: quello resta tutto. E se il tuo acquedotto usa cloramine al posto del cloro, non evaporano nemmeno quelle.", },
-
-  { id: "demi", t: "Demineralizzata", costo: "circa 1 € per 5 litri",
-    come: "Al supermercato, nel reparto ferri da stiro. Cerca la tacca che dice solo \u201cacqua demineralizzata\u201d, senza profumi né additivi: quelle profumate rovinano le radici.",
-    risolve: "Zero calcare e zero sali. È la soluzione più semplice ed economica che esista.",
-    problema: "Essendo priva di minerali, a lungo andare la pianta dipende solo dal concime: non saltarlo.", },
-
-  { id: "piovana", t: "Piovana", costo: "gratis",
-    come: "Un secchio sul balcone quando piove. Scarta i primi minuti di pioggia, che lavano via lo sporco dall'aria, e tienila al buio: alla luce diventa verde di alghe in una settimana.",
-    risolve: "È l'acqua migliore in assoluto: leggermente acida, senza calcare, con qualche minerale utile.",
-    problema: "Non è raccoglibile tutto l'anno, e non usarla se scende da una grondaia trattata o da un tetto in bitume.", },
-
-  { id: "condensa", t: "Condensa del deumidificatore", costo: "gratis",
-    come: "È l'acqua nella tanica del deumidificatore o dello split del condizionatore.",
-    risolve: "È praticamente distillata: zero calcare. Il modo più economico di avere acqua pura senza comprarla.",
-    problema: "Solo se l'apparecchio è pulito: nei filtri sporchi si accumulano batteri. Mai usarla su piante che poi mangi.", },
-
-  { id: "osmosi", t: "Osmosi inversa", costo: "150-400 € l'impianto",
-    come: "Un filtro sotto il lavello che spinge l'acqua attraverso una membrana finissima e trattiene quasi tutto. Alcuni frigoriferi e caraffe avanzate ce l'hanno già.",
-    risolve: "Acqua pura come la distillata, ma dal rubinetto e senza comprare bottiglie.",
-    problema: "Costa, va installata, e per ogni litro buono ne scarta due o tre. Ha senso solo se la usi anche per bere.", },
-
-  { id: "caraffa", t: "Caraffa filtrante", costo: "30 € più i filtri",
-    come: "Le classiche caraffe da frigorifero.",
-    risolve: "Abbassa un po' la durezza e toglie il cloro.",
-    problema: "Non demineralizza: riduce il calcare solo in parte, e la capacità cala man mano che il filtro si esaurisce. Meglio di niente, lontana dalla demineralizzata.", },
-
-  { id: "bollita", t: "Bollita", costo: "gratis",
-    come: "Si fa bollire e si lascia raffreddare, usando solo la parte superiore.",
-    risolve: "Fa precipitare sul fondo una parte del calcare, quello dei carbonati.",
-    problema: "Gli altri sali restano e anzi si concentrano, perché parte dell'acqua evapora. È il rimedio che sembra intelligente e funziona meno di tutti.", },
-];
-
 
 const STAGIONI = {
   ripresa:  { t: "Ripresa", mesi: "marzo-maggio", acqua: 1.0, concime: 1.0, dose: "mezza dose le prime due volte",
@@ -917,7 +783,6 @@ const STAGIONI = {
 const ORDINE_STAGIONI = ["ripresa", "piena", "rallenta", "riposo"];
 const stagioneDelMese = (m) => (m >= 2 && m <= 4 ? "ripresa" : m >= 5 && m <= 7 ? "piena" : m >= 8 && m <= 10 ? "rallenta" : "riposo");
 
-
 const SOSTEGNI = {
   nessuno:   { t: "Nessuno", nota: "" },
   "palo-cocco": { t: "Palo di cocco", nota: "Bagnalo a ogni annaffiatura: le radici aeree ci si aggrappano solo se è umido, ed è questo che fa crescere le foglie più grandi." },
@@ -925,8 +790,6 @@ const SOSTEGNI = {
   traliccio: { t: "Traliccio o arco", nota: "Guida i getti man mano, non tutti insieme: i tralci maturi si spezzano se piegati di colpo." },
   pensile:   { t: "Vaso pensile", nota: "Ricade invece di salire: taglia le punte ogni tanto o si spoglia alla base." },
 };
-
-
 
 const CATEGORIE = {
   troppa:  { t: "Troppa acqua", ic: "annega" },
@@ -937,133 +800,6 @@ const CATEGORIE = {
   aria:    { t: "Umidità", ic: "vapore" },
   luce:    { t: "Luce", ic: "sole" },
 };
-
-const PROBLEMI = [
-  { id: "marciume-radici", cat: "troppa", s: "Foglie gialle e terriccio ancora bagnato",
-    c: "Marciume radicale: le radici affogate non assorbono più, quindi la pianta ingiallisce come se avesse sete. È l'inganno più comune, e chi annaffia di più la finisce.",
-    f: ["Sfila il pane di terra e guarda: radici bianche o sode stanno bene, brune e molli sono marce.",
-        "Taglia tutto il marcio con forbici pulite, rinvasa in substrato asciutto e più drenante.",
-        "Non annaffiare per una settimana e non concimare per un mese."],
-    sp: ["Calathea", "Maranta", "Fittonia", "Peperomia", "Phlebodium", "Felce", "Spathiphyllum"] },
-
-  { id: "marciume-colletto", cat: "troppa", s: "Base del fusto molle, scura, che cede al tocco",
-    c: "Marciume del colletto: parte dal punto dove il fusto entra nel terriccio, spesso perché l'acqua ristagna lì o è finita nel cuore della rosetta.",
-    f: ["Sulle sansevierie e sulle grasse è quasi sempre fatale sotto quel punto: taglia sopra il marcio e fai radicare la parte sana.",
-        "Annaffia dal basso o lungo il bordo del vaso, mai al centro."],
-    sp: ["Sansevieria", "Sedum", "Crassul"] },
-
-  { id: "substrato-bagnato", cat: "troppa", s: "Il terriccio resta bagnato per più di una settimana",
-    c: "Substrato compattato o vaso troppo grande: la terra dove non arrivano radici trattiene acqua e basta.",
-    f: ["Rinvasa in un vaso solo 2-4 cm più largo, con più perlite o corteccia.",
-        "Verifica che il foro di drenaggio non sia otturato dalle radici."],
-    sp: ["Anthurium", "Phlebodium", "Monstera", "Philodendron"] },
-
-  { id: "sete", cat: "poca", s: "Foglie afflosciate di colpo, terriccio asciutto",
-    c: "Solo sete. Alcune specie crollano in modo teatrale e si rialzano in un'ora.",
-    f: ["Annaffia bene e aspetta: se si rialza era quello.",
-        "Se lo fa spesso, accorcia l'intervallo: ogni crollo costa qualche radichetta."],
-    sp: ["Spathiphyllum", "Fittonia", "Hypoestes", "Maranta"] },
-
-  { id: "idrorepellente", cat: "poca", s: "L'acqua scorre via subito e il vaso resta leggero",
-    c: "Pane di terra asciugato troppo: diventa idrorepellente e l'acqua scivola lungo le pareti senza bagnare niente.",
-    f: ["Immergi il vaso in una bacinella per dieci minuti, poi scola bene.",
-        "Vale sempre per i substrati a base di corteccia, che sono i più difficili da riumidire."],
-    sp: ["Anthurium", "Phlebodium", "Monstera"] },
-
-  { id: "ragnetto", cat: "bestie", s: "Ragnatele finissime tra le foglie, puntini che si muovono",
-    c: "Ragnetto rosso. Ama il caldo secco e attacca prima le foglie basse, sul rovescio. È il parassita che uccide più alocasie.",
-    f: ["Doccia con acqua tiepida sul rovescio delle foglie, con insistenza.",
-        "Avvia un ciclo di neem: tre passate a sette giorni di distanza, la sera.",
-        "Alza l'umidità: al secco si riproduce in pochi giorni."],
-    sp: ["Alocasia", "Hedera", "Howea", "Monstera", "Anthurium"] },
-
-  { id: "cocciniglia-farinosa", cat: "bestie", s: "Batuffoli bianchi cotonosi dove la foglia incontra il fusto",
-    c: "Cocciniglia farinosa. Si nasconde nelle ascelle e sotto i bordi del vaso, e passa da una pianta all'altra se si toccano.",
-    f: ["Toglila una a una con un cotton fioc imbevuto di alcol.",
-        "Poi neem su tutta la pianta, e isola quella colpita finché non è pulita.",
-        "Controlla anche il terriccio: alcune specie stanno sulle radici."],
-    sp: ["Anthurium", "Monstera", "Philodendron", "Epipremnum"] },
-
-  { id: "cocciniglia-bruna", cat: "bestie", s: "Scudetti marroni fermi sui piccioli, appiccicaticcio sulle foglie",
-    c: "Cocciniglia bruna. Sembrano crosticine e non si muovono: quello che appiccica è la loro melata, su cui poi cresce fumaggine nera.",
-    f: ["Staccale con l'unghia o uno spazzolino morbido.",
-        "Lava le foglie con acqua e poche gocce di sapone di Marsiglia, poi risciacqua.",
-        "Ripeti a distanza di dieci giorni: le uova sotto lo scudetto sopravvivono."],
-    sp: ["Hedera", "Howea", "Sansevieria", "Epipremnum"] },
-
-  { id: "sciaridi", cat: "bestie", s: "Moscerini che si alzano dal vaso quando lo muovi",
-    c: "Sciaridi. Gli adulti sono innocui, le larve mangiano le radichette e vivono solo in terriccio costantemente umido.",
-    f: ["Lascia asciugare i primi 3 cm: senza umido in superficie il ciclo si interrompe.",
-        "Uno strato di lapillo o sabbia sopra il terriccio impedisce la deposizione.",
-        "Le trappole gialle adesive prendono gli adulti ma non risolvono da sole."],
-    sp: ["Felce", "Phlebodium", "Fittonia", "Calathea"] },
-
-  { id: "tripidi", cat: "bestie", s: "Foglie con aree argentate e puntini neri, deformate da nuove",
-    c: "Tripidi. Sono minuscoli e velocissimi, e danneggiano le foglie mentre sono ancora arrotolate: il danno si vede quando è già fatto.",
-    f: ["Neem ripetuto ogni sette giorni per almeno tre cicli.",
-        "Taglia le foglie più colpite: non guariscono.",
-        "Sono i più tenaci: aspettati un mese di lavoro."],
-    sp: ["Alocasia", "Anthurium", "Monstera"] },
-
-  { id: "macchie-fungine", cat: "funghi", s: "Macchie brune con un alone giallo attorno",
-    c: "Macchie fogliari fungine o batteriche. Partono quasi sempre da foglie bagnate che restano umide tutta la notte.",
-    f: ["Taglia le foglie colpite e buttale, non nel compost.",
-        "Non nebulizzare la sera: le foglie devono asciugare prima del buio.",
-        "Aumenta la circolazione d'aria fra le piante."],
-    sp: ["Maranta", "Calathea", "Fittonia"] },
-
-  { id: "oidio", cat: "funghi", s: "Patina bianca polverosa sulle foglie",
-    c: "Oidio, il mal bianco. Arriva con aria ferma e sbalzi di temperatura, più che con l'umidità.",
-    f: ["Pulisci le foglie con un panno umido e isola la pianta.",
-        "Bicarbonato in acqua o zolfo bagnabile sulle parti colpite.",
-        "Distanzia le piante: l'aria ferma è la causa principale."],
-    sp: ["Hypoestes", "Peperomia", "Hedera"] },
-
-  { id: "muffa-terriccio", cat: "funghi", s: "Muffa bianca soffice sulla superficie del terriccio",
-    c: "Quasi sempre innocua: sono funghi saprofiti che mangiano materia organica. Segnalano però che quel terriccio resta troppo umido.",
-    f: ["Raschia via lo strato superficiale e lascia asciugare di più.",
-        "Non serve nessun trattamento: sparisce da sola quando la superficie asciuga."],
-    sp: ["Felce", "Phlebodium", "Anthurium"] },
-
-  { id: "sali", cat: "concime", s: "Crosta bianca sul terriccio o sul bordo del vaso",
-    c: "Accumulo di sali, da concime in eccesso o acqua dura. I sali richiamano acqua fuori dalle radici e le bruciano.",
-    f: ["Dilava: acqua abbondante che esce dal foro, ripetuta tre o quattro volte.",
-        "Sospendi il concime per due mesi.",
-        "Se l'acqua è dura, passa alla demineralizzata."],
-    sp: ["Howea", "Chlorophytum", "Sansevieria", "Dracaena"] },
-
-  { id: "carenza", cat: "concime", s: "Foglie nuove piccole e pallide, crescita ferma in piena stagione",
-    c: "Carenza di nutrienti: substrato esaurito o mai concimato. Nei substrati a base di corteccia succede prima, perché trattengono poco.",
-    f: ["Riprendi il concime a mezza dose e osserva la foglia successiva.",
-        "Se non cambia niente in due mesi, il problema è la luce o le radici, non il cibo."],
-    sp: ["Anthurium", "Monstera", "Philodendron"] },
-
-  { id: "punte-secche", cat: "aria", s: "Punte e bordi marroni e croccanti",
-    c: "Aria secca, calcare nell'acqua o entrambi. Il sintomo più frainteso di tutti: sembra sete e non lo è.",
-    f: ["Passa ad acqua demineralizzata o piovana.",
-        "Raggruppa le piante e allontanale dai termosifoni.",
-        "Le punte già secche non tornano verdi: taglia seguendo il profilo della foglia."],
-    sp: ["Calathea", "Maranta", "Chlorophytum", "Howea", "Fittonia"] },
-
-  { id: "arricciate", cat: "aria", s: "Foglie arricciate verso l'interno",
-    c: "La pianta riduce la superficie esposta per perdere meno acqua: aria troppo secca, oppure radici che non riescono ad assorbire.",
-    f: ["Controlla prima il terriccio: se è bagnato, il problema sono le radici, non l'aria.",
-        "Se è asciutto e l'aria è secca, alza l'umidità raggruppando le piante."],
-    sp: ["Fittonia", "Calathea", "Maranta"] },
-
-  { id: "filatura", cat: "luce", s: "Steli lunghi e spogli, foglie piccole e distanti",
-    c: "Filatura: la pianta si allunga cercando la luce. È il segnale più affidabile di posizione sbagliata.",
-    f: ["Spostala più vicino a una finestra, in modo graduale.",
-        "Pota gli steli filati: ricrescerà più compatta.",
-        "Sulle variegate la luce scarsa fa anche tornare verdi le parti chiare."],
-    sp: ["Monstera", "Hypoestes", "Epipremnum", "Pilea"] },
-
-  { id: "scottatura", cat: "luce", s: "Macchie chiare, sbiancate o secche al centro della foglia",
-    c: "Scottatura da sole diretto, spesso attraverso un vetro che concentra il calore.",
-    f: ["Sposta la pianta o schermala con una tenda leggera.",
-        "Le parti bruciate non guariscono: si taglia la foglia solo se è compromessa per più di metà."],
-    sp: ["Maranta", "Calathea", "Phlebodium", "Fittonia"] },
-];
 
 const ZONE = [
   { k: "foglie", t: "Sulle foglie" },
@@ -1108,115 +844,10 @@ const SINTOMI = [
   { z: "bestie", t: "Insetti minuscoli e velocissimi", esiti: ["tripidi"] },
 ];
 
-
-const BOTANICA = {
-  "Monstera deliciosa": { f: "Araceae", o: "Messico meridionale e Panama",
-    h: "Emiemifita: germina a terra, trova un tronco e ci sale sopra usando radici aeree, perdendo poi il contatto col suolo.",
-    c: "I buchi non sono un vezzo: lasciano passare il vento e la luce alle foglie sottostanti nel sottobosco. Compaiono solo con la maturità, e il frutto maturo è l'unica parte commestibile della pianta.",
-    t: "Tossica: tutta la pianta contiene ossalati di calcio, che bruciano bocca e gola." },
-  "Monstera adansonii": { f: "Araceae", o: "America centrale e meridionale",
-    h: "Rampicante di sottobosco, sale sui tronchi in ombra parziale.",
-    c: "Le fenestrazioni ci sono fin da giovane, al contrario della deliciosa. In natura arriva a coprire interi tronchi.",
-    t: "Tossica: ossalati di calcio." },
-  "Monstera adansonii Mint (variegata)": { f: "Araceae", o: "Selezione orticola",
-    h: "Come la specie, ma le parti bianche non fanno fotosintesi.",
-    c: "La variegatura è una mutazione instabile: la pianta può tornare tutta verde, e in quel caso cresce molto più in fretta perché smette di sprecare energia.",
-    t: "Tossica: ossalati di calcio." },
-  "Alocasia": { f: "Araceae", o: "Sud-est asiatico e Australia orientale",
-    h: "Sottobosco umido tropicale, da rizoma o tubero.",
-    c: "In inverno può perdere tutte le foglie ed entrare in dormienza: sembra morta ma il tubero è vivo, e ributta a marzo. È il motivo per cui ne finiscono migliaia nel bidone ogni anno.",
-    t: "Tossica: ossalati di calcio, tra le più irritanti del gruppo." },
-  "Alocasia amazonica (Polly)": { f: "Araceae", o: "Nessuna: è un ibrido di vivaio",
-    h: "Incrocio orticolo, in natura non esiste.",
-    c: "Il nome inganna: non ha niente a che fare con l'Amazzonia. Deriva dal vivaio Amazon Nursery della Florida, dove l'ibrido fu creato negli anni Cinquanta.",
-    t: "Tossica: ossalati di calcio." },
-  "Anthurium regale": { f: "Araceae", o: "Perù",
-    h: "Epifita: cresce aggrappata ai tronchi, con le radici all'aria.",
-    c: "Le foglie velluto arrivano a un metro in natura. Quell'effetto vellutato viene da cellule epidermiche a cupola che catturano la poca luce del sottobosco, ed è anche il motivo per cui una goccia d'acqua lascia il segno per sempre.",
-    t: "Tossica: ossalati di calcio." },
-  "Anthurium warocqueanum": { f: "Araceae", o: "Colombia",
-    h: "Epifita di foresta nebulosa, tra i 200 e i 1500 metri.",
-    c: "La chiamano queen anthurium: le foglie pendenti superano il metro e mezzo. Cresce lentissima e vuole umidità che in casa non esiste, ed è per questo che è una delle piante più difficili in commercio.",
-    t: "Tossica: ossalati di calcio." },
-  "Howea forsteriana (kentia)": { f: "Arecaceae", o: "Madagascar, endemica",
-    h: "Cresce lungo i corsi d'acqua, con le radici quasi sempre umide.",
-    c: "In natura arriva a dodici metri, e in Madagascar è minacciata: ne restano poche popolazioni selvatiche. Quella che compri nei supermercati è tutta da coltivazione.",
-    t: "Non tossica." },
-  "Epipremnum aureum (pothos)": { f: "Araceae", o: "Moorea, Polinesia francese",
-    h: "Rampicante che in natura sale sugli alberi fino a venti metri.",
-    c: "Le foglie che conosci sono giovanili: se lasciata salire su un tronco produce foglie da un metro, fenestrate come una monstera. È anche una specie invasiva grave in molte zone tropicali.",
-    t: "Tossica: ossalati di calcio." },
-  "Spathiphyllum (spatifillo)": { f: "Araceae", o: "America centrale e Colombia",
-    h: "Sottobosco umido di foresta pluviale.",
-    c: "Il fiore non è il fiore: la parte bianca è una brattea, e i fiori veri sono i puntini sulla pannocchia centrale. Fiorisce solo con abbastanza luce, quindi in penombra resta verde per anni.",
-    t: "Tossica: ossalati di calcio." },
-  "Maranta leuconeura": { f: "Marantaceae", o: "Foresta pluviale brasiliana",
-    h: "Tappezzante di sottobosco, in ombra profonda.",
-    c: "Di notte alza le foglie e le chiude come mani giunte: si chiama nictinastia ed è un movimento vero, guidato da cuscinetti d'acqua alla base del picciolo. Da lì il nome di pianta della preghiera.",
-    t: "Non tossica." },
-  "Calathea": { f: "Marantaceae", o: "America tropicale",
-    h: "Sottobosco umido, all'ombra di alberi alti.",
-    c: "Nel 2012 gran parte delle calathee è stata riclassificata nel genere Goeppertia: quello che compri come Calathea spesso ha già un altro nome scientifico.",
-    t: "Non tossica." },
-  "Fittonia albivenis": { f: "Acanthaceae", o: "Perù e bacino amazzonico",
-    h: "Tappeto del sottobosco, in ombra e umidità costante.",
-    c: "Il reticolo bianco sono le nervature: albivenis vuol dire proprio vene bianche. Il crollo teatrale quando ha sete è un meccanismo di risparmio idrico, non un danno.",
-    t: "Non tossica." },
-  "Chlorophytum (spider plant)": { f: "Asparagaceae", o: "Africa australe",
-    h: "Sottobosco e zone rocciose, con radici tuberose che immagazzinano acqua.",
-    c: "Fa figli su stoloni lunghi anche un metro: è una delle poche piante d'appartamento che si clona da sola. Ed è tra le pochissime del tutto sicure per i gatti.",
-    t: "Non tossica." },
-  "Sansevieria (snake plant)": { f: "Asparagaceae", o: "Africa occidentale tropicale",
-    h: "Zone aride e rocciose, in pieno sole o mezz'ombra.",
-    c: "Dal 2017 il genere Sansevieria è stato assorbito in Dracaena. Fa fotosintesi CAM: apre gli stomi di notte per perdere meno acqua, come i cactus.",
-    t: "Lievemente tossica se ingerita." },
-  "Sansevieria intrecciata": { f: "Asparagaceae", o: "Africa occidentale tropicale",
-    h: "Come la specie: l'intreccio è lavorazione da vivaio.",
-    c: "Le foglie sono state legate da giovani e sono cresciute così. Nel punto d'incrocio l'acqua ristagna, ed è lì che comincia il marciume.",
-    t: "Lievemente tossica se ingerita." },
-  "Peperomia polybotrya (raindrop)": { f: "Piperaceae", o: "Perù e Colombia",
-    h: "Epifita e rupicola, spesso su rocce coperte di muschio.",
-    c: "Parente stretta del pepe nero. Le foglie carnose sono una riserva d'acqua: per questo tollera di essere dimenticata e non tollera il terriccio zuppo.",
-    t: "Non tossica." },
-  "Peperomia obtusifolia": { f: "Piperaceae", o: "Florida, Caraibi e Sud America",
-    h: "Epifita nelle foreste umide, su tronchi e ceppaie.",
-    c: "Si moltiplica da una sola foglia con un pezzo di picciolo: una delle propagazioni più facili che esistano.",
-    t: "Non tossica." },
-  "Phlebodium aureum (felce blu)": { f: "Polypodiaceae", o: "America tropicale e subtropicale",
-    h: "Epifita: vive sui tronchi e alla base delle palme, mai nella terra.",
-    c: "Il rizoma è coperto di squame dorate, da cui aureum. La sfumatura azzurra viene da una cera superficiale che riflette la luce: se strofini le foglie va via e non torna.",
-    t: "Non tossica." },
-  "Felce rustica da esterno": { f: "Dryopteridaceae", o: "Boschi temperati dell'emisfero nord",
-    h: "Sottobosco fresco e ombroso, su terreni ricchi di foglie decomposte.",
-    c: "Le felci non hanno né fiori né semi: si riproducono con spore, e sulla pagina inferiore delle fronde vedrai i sori, i puntini scuri che le contengono.",
-    t: "Non tossica per contatto." },
-  "Hedera helix (edera)": { f: "Araliaceae", o: "Europa e Asia occidentale",
-    h: "Rampicante di bosco, si arrampica con radichette avventizie.",
-    c: "Ha due forme distinte: da giovane rampicante con foglie a lobi, da adulta arbustiva con foglie intere, e solo in quella forma fiorisce. Le talee mantengono la forma da cui provengono.",
-    t: "Tossica: bacche e foglie contengono saponine." },
-  "Pilea peperomioides": { f: "Urticaceae", o: "Yunnan, Cina sud-occidentale",
-    h: "Rupicola: cresce su rocce ombrose ai piedi dell'Himalaya.",
-    c: "Per decenni è stata quasi sconosciuta ai botanici occidentali: si è diffusa in Europa dagli anni Quaranta passando di mano in mano come talea, portata da un missionario norvegese, prima ancora di essere identificata con certezza.",
-    t: "Non tossica." },
-  "Hypoestes (polka dot)": { f: "Acanthaceae", o: "Madagascar",
-    h: "Sottobosco umido.",
-    c: "Le macchie rosa sono aree prive di clorofilla: più luce riceve, più il disegno è marcato. In ombra sbiadisce e la pianta si allunga.",
-    t: "Non tossica." },
-  "Sedum nussbaumerianum": { f: "Crassulaceae", o: "Veracruz, Messico",
-    h: "Scarpate rocciose assolate, con pochissimo suolo.",
-    c: "Le foglie virano al rame per proteggersi dall'eccesso di luce: è un pigmento protettivo, quindi il colore che ti piace è letteralmente una scottatura controllata. La patina bianca sopra è cera, e una volta tolta con le dita non ricresce su quella foglia.",
-    t: "Non tossica." },
-  "Philodendron": { f: "Araceae", o: "America tropicale",
-    h: "Rampicanti ed emiemifite di foresta pluviale.",
-    c: "È il secondo genere più numeroso delle Araceae: quasi cinquecento specie descritte, e molte ancora no.",
-    t: "Tossica: ossalati di calcio." },
-};
-
 const ILLUSTRAZIONI = ["deliciosa", "adansonii", "adansonii-solo", "pothos", "pothos-acqua", "alocasia", "polly",
   "anthurium-regale", "anthurium-serra", "spatifillo", "maranta", "calathea", "fittonia", "polkadot",
   "raindrop", "peperomia", "sedum", "snake", "snake-intrecciata", "spider", "palma", "felce", "felce-blu",
   "felce-montagna", "edera-acqua", "pilea-acqua", "generica"];
-
 
 const EN = {
   "Oggi ti sei preso cura di parecchie.": "You've looked after quite a few today.",
@@ -1843,343 +1474,6 @@ const EN = {
 
 const t = (s, lingua) => (lingua === "en" ? (EN[s] ?? s) : s);
 
-
-const EN_PROBLEMI = {
-  "marciume-radici": { s: "Yellow leaves and soil still wet",
-    c: "Root rot: drowned roots stop absorbing, so the plant yellows as if it were thirsty. It's the commonest trap, and watering more finishes it off.",
-    f: ["Slide the root ball out and look: white firm roots are fine, brown mushy ones are rotten.",
-        "Cut away everything rotten with clean scissors, repot into dry, sharper-draining mix.",
-        "Don't water for a week and don't feed for a month."] },
-  "marciume-colletto": { s: "Base of the stem soft, dark, giving way",
-    c: "Crown rot: it starts where the stem meets the soil, usually because water sits there or has run into the centre of the rosette.",
-    f: ["On snake plants and succulents it's almost always fatal below that point: cut above the rot and root the healthy part.",
-        "Water from below or along the rim of the pot, never into the middle."] },
-  "substrato-bagnato": { s: "The soil stays wet for more than a week",
-    c: "Compacted mix or an oversized pot: soil with no roots in it just holds water.",
-    f: ["Repot into a pot only 2-4 cm wider, with more perlite or bark.",
-        "Check the drainage hole isn't blocked by roots."] },
-  "sete": { s: "Leaves suddenly collapsed, soil dry",
-    c: "Just thirst. Some species faint dramatically and stand back up within the hour.",
-    f: ["Water well and wait: if it recovers, that was it.",
-        "If it happens often, shorten the interval: every collapse costs a few root hairs."] },
-  "idrorepellente": { s: "Water runs straight through and the pot stays light",
-    c: "The root ball dried out too far: it turns water-repellent and the water slides down the sides without wetting anything.",
-    f: ["Stand the pot in a basin for ten minutes, then drain well.",
-        "Always true for bark-based mixes, the hardest of all to re-wet."] },
-  "ragnetto": { s: "Very fine webbing between leaves, moving dots",
-    c: "Spider mites. They love dry warmth and start on the lower leaves, underneath. The pest that kills the most alocasias.",
-    f: ["Shower with lukewarm water on the undersides, thoroughly.",
-        "Start a neem cycle: three passes seven days apart, in the evening.",
-        "Raise the humidity: in dry air they breed within days."] },
-  "cocciniglia-farinosa": { s: "White cottony tufts where leaf meets stem",
-    c: "Mealybugs. They hide in leaf axils and under the pot rim, and move between plants that touch.",
-    f: ["Remove them one by one with a cotton bud dipped in alcohol.",
-        "Then neem over the whole plant, and isolate it until it's clean.",
-        "Check the soil too: some species live on the roots."] },
-  "cocciniglia-bruna": { s: "Brown scales stuck on the stalks, sticky leaves",
-    c: "Brown scale. They look like little scabs and don't move: the stickiness is their honeydew, on which black sooty mould then grows.",
-    f: ["Scrape them off with a fingernail or a soft toothbrush.",
-        "Wash the leaves with water and a few drops of mild soap, then rinse.",
-        "Repeat after ten days: the eggs under the scale survive."] },
-  "sciaridi": { s: "Small flies rising from the pot when you move it",
-    c: "Fungus gnats. The adults are harmless, the larvae eat root hairs and only live in constantly damp compost.",
-    f: ["Let the top 3 cm dry out: without surface moisture the cycle breaks.",
-        "A layer of grit or sand on top stops them laying.",
-        "Yellow sticky traps catch adults but don't solve it alone."] },
-  "tripidi": { s: "Silvery patches with black dots, new leaves deformed",
-    c: "Thrips. Tiny and fast, they damage leaves while still furled: you see the damage once it's done.",
-    f: ["Neem repeated every seven days for at least three cycles.",
-        "Cut the worst leaves: they don't heal.",
-        "The most stubborn of all: expect a month of work."] },
-  "macchie-fungine": { s: "Brown spots with a yellow halo",
-    c: "Fungal or bacterial leaf spot. Almost always starts from wet leaves left damp overnight.",
-    f: ["Cut off affected leaves and bin them, not the compost.",
-        "Don't mist in the evening: leaves must dry before dark.",
-        "Improve airflow between plants."] },
-  "oidio": { s: "White powdery film on the leaves",
-    c: "Powdery mildew. It comes with still air and temperature swings, more than with humidity.",
-    f: ["Wipe the leaves with a damp cloth and isolate the plant.",
-        "Bicarbonate in water, or wettable sulphur, on affected parts.",
-        "Space the plants out: still air is the main cause."] },
-  "muffa-terriccio": { s: "Soft white mould on the surface of the soil",
-    c: "Almost always harmless: saprophytic fungi eating organic matter. It does tell you that mix stays too wet.",
-    f: ["Scrape off the top layer and let it dry more.",
-        "No treatment needed: it goes when the surface dries."] },
-  "sali": { s: "White crust on the soil or the pot rim",
-    c: "Salt build-up, from over-feeding or hard water. Salts pull water back out of the roots and burn them.",
-    f: ["Flush it: plenty of water running out of the hole, three or four times over.",
-        "Stop feeding for two months.",
-        "If your water is hard, switch to distilled."] },
-  "carenza": { s: "New leaves small and pale, growth stalled in season",
-    c: "Nutrient shortage: exhausted mix, or never fed. It happens sooner in bark-based mixes, which hold little.",
-    f: ["Resume feeding at half strength and watch the next leaf.",
-        "If nothing changes in two months, the problem is light or roots, not food."] },
-  "punte-secche": { s: "Brown, crispy tips and edges",
-    c: "Dry air, limescale in the water, or both. The most misread symptom there is: it looks like thirst and isn't.",
-    f: ["Switch to distilled or rainwater.",
-        "Group the plants together and move them away from radiators.",
-        "Tips already brown won't turn green again: trim following the leaf outline."] },
-  "arricciate": { s: "Leaves curling inwards",
-    c: "The plant is reducing its exposed surface to lose less water: air too dry, or roots unable to absorb.",
-    f: ["Check the soil first: if it's wet, the problem is the roots, not the air.",
-        "If it's dry and the air is dry, raise humidity by grouping plants."] },
-  "filatura": { s: "Long bare stems, small widely spaced leaves",
-    c: "Etiolation: the plant is stretching towards light. The most reliable sign of a wrong spot.",
-    f: ["Move it closer to a window, gradually.",
-        "Prune the stretched stems: it will regrow more compact.",
-        "On variegated plants, low light also turns the pale parts green again."] },
-  "scottatura": { s: "Pale, bleached or dry patches in the middle of the leaf",
-    c: "Sunburn from direct sun, often through glass that concentrates the heat.",
-    f: ["Move the plant or screen it with a light curtain.",
-        "Burnt areas don't heal: only remove the leaf if more than half is gone."] },
-};
-
-
-const EN_BOTANICA = {
-  "Monstera deliciosa": { f: "Araceae", o: "Southern Mexico and Panama",
-    h: "Hemiepiphyte: it germinates on the ground, finds a trunk and climbs it with aerial roots, eventually losing contact with the soil.",
-    c: "The holes aren't decoration: they let wind and light through to the leaves below in the understorey. They only appear with maturity, and the ripe fruit is the one edible part of the plant.",
-    t: "Toxic: the whole plant contains calcium oxalate, which burns mouth and throat." },
-  "Monstera adansonii": { f: "Araceae", o: "Central and South America",
-    h: "Understorey climber, going up trunks in partial shade.",
-    c: "The fenestrations are there from a young age, unlike deliciosa. In the wild it covers entire trunks.",
-    t: "Toxic: calcium oxalate." },
-  "Monstera adansonii Mint (variegata)": { f: "Araceae", o: "Horticultural selection",
-    h: "Like the species, but with pale green leaf sectors rather than white ones.",
-    c: "Mint differs from white variegation: the pale sectors still contain chlorophyll, so they work. It grows faster, burns far less in sun, and the variegation is much more stable — it rarely reverts.",
-    t: "Toxic: calcium oxalate." },
-  "Alocasia": { f: "Araceae", o: "South-east Asia and eastern Australia",
-    h: "Humid tropical understorey, from a rhizome or tuber.",
-    c: "In winter it can drop every leaf and go dormant: it looks dead but the tuber is alive and shoots again in March. Thousands end up in the bin every year for this reason.",
-    t: "Toxic: calcium oxalate, among the most irritating of the group." },
-  "Alocasia amazonica (Polly)": { f: "Araceae", o: "None: it's a nursery hybrid",
-    h: "A horticultural cross; it doesn't exist in the wild.",
-    c: "The name misleads: nothing to do with the Amazon. It comes from the Amazon Nursery in Florida, where the hybrid was created in the 1950s.",
-    t: "Toxic: calcium oxalate." },
-  "Anthurium regale": { f: "Araceae", o: "Peru",
-    h: "Epiphyte: it grows clinging to trunks, roots in the air.",
-    c: "Velvet leaves reach a metre in the wild. That velvet comes from dome-shaped epidermal cells that capture the scarce understorey light — and it's also why a single water droplet leaves a permanent mark.",
-    t: "Toxic: calcium oxalate." },
-  "Anthurium warocqueanum": { f: "Araceae", o: "Colombia",
-    h: "Cloud-forest epiphyte, between 200 and 1500 metres.",
-    c: "They call it the queen anthurium: the hanging leaves pass a metre and a half. It grows very slowly and wants humidity that doesn't exist indoors, which is why it's one of the hardest plants in the trade.",
-    t: "Toxic: calcium oxalate." },
-  "Howea forsteriana (kentia)": { f: "Arecaceae", o: "Lord Howe Island, Australia — endemic",
-    h: "Subtropical forest understorey: it grows in the shade of taller trees, not in full sun.",
-    c: "All of them come from an eleven-square-kilometre island in the Pacific, where seed collection and export are regulated by law and are the main local industry. It's the Victorian parlour palm precisely because it takes low light and dry air better than any other.",
-    t: "Not toxic." },
-  "Epipremnum aureum (pothos)": { f: "Araceae", o: "Moorea, French Polynesia",
-    h: "A climber that goes twenty metres up trees in the wild.",
-    c: "The leaves you know are juvenile: let it climb a trunk and it makes metre-long fenestrated leaves like a monstera. It's also a serious invasive species across the tropics.",
-    t: "Toxic: calcium oxalate." },
-  "Spathiphyllum (spatifillo)": { f: "Araceae", o: "Central America and Colombia",
-    h: "Humid rainforest understorey.",
-    c: "The flower isn't the flower: the white part is a bract, and the real flowers are the dots on the central spike. It only blooms with enough light, so in shade it stays green for years.",
-    t: "Toxic: calcium oxalate." },
-  "Maranta leuconeura": { f: "Marantaceae", o: "Brazilian rainforest",
-    h: "Understorey ground cover, in deep shade.",
-    c: "At night it raises its leaves and folds them like praying hands: it's called nyctinasty, a real movement driven by water cushions at the base of each stalk. Hence the name prayer plant.",
-    t: "Not toxic." },
-  "Calathea": { f: "Marantaceae", o: "Tropical America",
-    h: "Humid understorey, shaded by taller trees.",
-    c: "In 2012 most calatheas were reclassified into the genus Goeppertia: what you buy as Calathea often already has another scientific name.",
-    t: "Not toxic." },
-  "Fittonia albivenis": { f: "Acanthaceae", o: "Peru and the Amazon basin",
-    h: "Forest-floor carpet, in shade and constant humidity.",
-    c: "The white net is the veins: albivenis literally means white-veined. The theatrical collapse when thirsty is a water-saving mechanism, not damage.",
-    t: "Not toxic." },
-  "Chlorophytum (spider plant)": { f: "Asparagaceae", o: "Southern Africa",
-    h: "Understorey and rocky ground, with tuberous roots that store water.",
-    c: "It makes babies on runners up to a metre long: one of the few houseplants that clones itself. And one of the very few completely safe around cats.",
-    t: "Not toxic." },
-  "Sansevieria (snake plant)": { f: "Asparagaceae", o: "Tropical West Africa",
-    h: "Arid, rocky ground, in full sun or partial shade.",
-    c: "Since 2017 the genus Sansevieria has been absorbed into Dracaena. It runs CAM photosynthesis: stomata open at night to lose less water, like cacti.",
-    t: "Mildly toxic if eaten." },
-  "Sansevieria intrecciata": { f: "Asparagaceae", o: "Tropical West Africa",
-    h: "As the species: the braid is nursery work.",
-    c: "The leaves were tied young and grew that way. Water pools where they cross, and that's where rot starts.",
-    t: "Mildly toxic if eaten." },
-  "Peperomia polybotrya (raindrop)": { f: "Piperaceae", o: "Peru and Colombia",
-    h: "Epiphytic and rock-dwelling, often on moss-covered stone.",
-    c: "A close relative of black pepper. The fleshy leaves are a water store: that's why it tolerates being forgotten and won't tolerate soggy soil.",
-    t: "Not toxic." },
-  "Peperomia obtusifolia": { f: "Piperaceae", o: "Florida, the Caribbean and South America",
-    h: "Epiphytic in humid forest, on trunks and stumps.",
-    c: "It propagates from a single leaf with a piece of stalk: one of the easiest propagations there is.",
-    t: "Not toxic." },
-  "Phlebodium aureum (felce blu)": { f: "Polypodiaceae", o: "Tropical and subtropical America",
-    h: "Epiphyte: it lives on trunks and at the base of palms, never in soil.",
-    c: "The rhizome is covered in golden scales, hence aureum. The blue cast comes from a surface wax that reflects light: rub the leaves and it goes, permanently.",
-    t: "Not toxic." },
-  "Felce rustica da esterno": { f: "Dryopteridaceae", o: "Temperate woodland of the northern hemisphere",
-    h: "Cool shaded understorey, on soil rich in leaf litter.",
-    c: "Ferns have neither flowers nor seeds: they reproduce by spores, and on the underside of the fronds you'll see the sori, the dark dots that hold them.",
-    t: "Not toxic to the touch." },
-  "Hedera helix (edera)": { f: "Araliaceae", o: "Europe and western Asia",
-    h: "Woodland climber, gripping with adventitious rootlets.",
-    c: "It has two distinct forms: juvenile and climbing with lobed leaves, adult and shrubby with entire leaves, and only the adult form flowers. Cuttings keep whichever form they came from.",
-    t: "Toxic: berries and leaves contain saponins." },
-  "Pilea peperomioides": { f: "Urticaceae", o: "Yunnan, south-west China",
-    h: "Rock-dweller: it grows on shaded rock at the foot of the Himalayas.",
-    c: "For decades it was nearly unknown to Western botanists: it spread through Europe from the 1940s hand to hand as cuttings, carried by a Norwegian missionary, before it had been firmly identified.",
-    t: "Not toxic." },
-  "Hypoestes (polka dot)": { f: "Acanthaceae", o: "Madagascar",
-    h: "Humid understorey.",
-    c: "The pink patches are areas without chlorophyll: the more light it gets, the stronger the pattern. In shade it fades and the plant stretches.",
-    t: "Not toxic." },
-  "Sedum nussbaumerianum": { f: "Crassulaceae", o: "Veracruz, Mexico",
-    h: "Sunny rocky slopes, with almost no soil.",
-    c: "The leaves turn copper to protect themselves from excess light: it's a protective pigment, so the colour you like is literally a controlled sunburn. The white bloom on top is wax, and once rubbed off with your fingers it never returns on that leaf.",
-    t: "Not toxic." },
-  "Philodendron": { f: "Araceae", o: "Tropical America",
-    h: "Climbers and hemiepiphytes of the rainforest.",
-    c: "The second largest genus in the Araceae: nearly five hundred described species, and many still not.",
-    t: "Toxic: calcium oxalate." },
-};
-
-const EN_MISCELE = {
-  "aroidee-epifite": { titolo: "Epiphytic aroids", parti: ["50% fine pine bark", "20% perlite", "20% sphagnum", "10% charcoal"],
-    perche: "Aerial roots evolved to grip tree bark: they want air between them, not soil. Standard potting compost here is the most common reason a plant stalls." },
-  "aroidee-terrestri": { titolo: "Ground aroids", parti: ["40% potting compost", "30% fine bark", "20% perlite", "10% lava rock or charcoal"],
-    perche: "Rich but loose: the bark creates air pockets, the perlite stops it compacting." },
-  "marantacee": { titolo: "Prayer plants", parti: ["50% coco coir or peat", "30% perlite", "20% fine bark"],
-    perche: "Acidic mix that stays damp without turning to mud. It must never dry out completely, nor stay waterlogged." },
-  "peperomie": { titolo: "Peperomias", parti: ["40% potting compost", "40% perlite or pumice", "20% fine bark"],
-    perche: "Fleshy leaves hold their own water: the roots need to dry fast. Being pot-bound suits them." },
-  "sansevierie": { titolo: "Snake plants", parti: ["60% cactus compost", "40% pumice or lava rock"],
-    perche: "The sharpest-draining mix of all. If it stays damp for more than a few days the rhizome rots from below with no warning." },
-  "palme": { titolo: "Palms", parti: ["60% potting compost", "20% pumice or coarse sand", "20% bark"],
-    perche: "Must hold moisture deep down without compacting: the only one here that dislikes drying out completely." },
-  "felci": { titolo: "Ferns", parti: ["50% potting compost", "30% coco coir", "20% perlite"],
-    perche: "Damp and light. The roots are fine and shallow: a heavy mix suffocates them quickly." },
-  "felci-epifite": { titolo: "Epiphytic ferns", parti: ["40% fine bark", "30% coco coir", "20% perlite", "10% sphagnum"],
-    perche: "Phlebodium grows on trunks, not in soil: the furry rhizome must sit on the surface, never buried, or it rots." },
-  "grasse": { titolo: "Succulents", parti: ["50% cactus compost", "30% pumice or lava rock", "20% coarse sand"],
-    perche: "It has to dry in two or three days. Rosettes rot at the collar, so a top layer of grit keeps the leaves off the wet." },
-  "facili": { titolo: "General houseplant", parti: ["70% potting compost", "30% perlite"],
-    perche: "For the plants that don't make a fuss. The perlite still matters: compost alone compacts within months." },
-  "acqua": { titolo: "Still in water", parti: ["No mix for now"],
-    perche: "Once roots reach 4-5 cm, first pot into a small container with the right mix for the species. The longer you wait, the worse they adapt." },
-};
-
-const EN_ACQUE = {
-  rubinetto: { t: "Tap water", costo: "free", come: "Straight from the tap.",
-    risolve: "Fine for most houseplants.",
-    problema: "In hard-water areas it leaves limescale and slowly raises the pH of the soil." },
-  riposata: { t: "Left to stand overnight", costo: "free", come: "Fill an open jug and leave it out for 12-24 hours.",
-    risolve: "Chlorine evaporates and the water reaches room temperature, avoiding root shock.",
-    problema: "It does not remove limescale, and if your supplier uses chloramine that doesn't evaporate either." },
-  demi: { t: "Distilled", costo: "about €1 for 5 litres", come: "Supermarket, in the iron and steam-cleaner aisle. Look for pure distilled water with no perfume or additives, which damage roots.",
-    risolve: "No limescale and no salts. The simplest and cheapest answer there is.",
-    problema: "Being mineral-free, the plant depends entirely on fertiliser: don't skip it." },
-  piovana: { t: "Rainwater", costo: "free", come: "A bucket on the balcony. Discard the first few minutes, which wash dust out of the air, and store it in the dark or it turns green within a week.",
-    risolve: "The best water there is: slightly acidic, limescale-free, with a few useful minerals.",
-    problema: "Not available all year, and not to be used if it runs off a treated gutter or a bitumen roof." },
-  condensa: { t: "Dehumidifier condensate", costo: "free", come: "The water in the tank of a dehumidifier or air conditioner.",
-    risolve: "Essentially distilled: no limescale at all. The cheapest way to get pure water without buying it.",
-    problema: "Only if the unit is clean: bacteria build up in dirty filters. Never on edible plants." },
-  osmosi: { t: "Reverse osmosis", costo: "€150-400 for the system", come: "An under-sink filter that pushes water through a very fine membrane which holds back almost everything.",
-    risolve: "Water as pure as distilled, straight from the tap and without buying bottles.",
-    problema: "Costly, needs installing, and wastes two or three litres for every good one. Only worth it if you drink it too." },
-  caraffa: { t: "Filter jug", costo: "€30 plus cartridges", come: "The classic fridge jug.",
-    risolve: "Lowers hardness a little and removes chlorine.",
-    problema: "It does not demineralise: it only partly reduces limescale, and its capacity fades as the cartridge ages." },
-  bollita: { t: "Boiled", costo: "free", come: "Boil it, let it cool and use only the top part.",
-    risolve: "Some of the limescale, the carbonate part, settles at the bottom.",
-    problema: "The other salts stay and actually concentrate, because some water evaporates. The remedy that sounds clever and works least." },
-};
-
-
-const PROFILI = {
-  "Monstera deliciosa": { giorni: 8, concime: 21, miscela: "aroidee-terrestri", rinvaso: 24, sostegno: "palo-cocco",
-    spray: true, pulizia: true, rotazione: true, tipoAcqua: "rubinetto",
-    metodo: "A pioggia lenta finché esce dal foro, poi svuota il sottovaso.",
-    consiglio: "Luce indiretta forte: vicino a una finestra, mai sul davanzale al sole." },
-  "Monstera adansonii": { giorni: 7, concime: 21, miscela: "aroidee-terrestri", rinvaso: 18, sostegno: "palo-cocco",
-    spray: true, pulizia: true, rotazione: true, tipoAcqua: "rubinetto",
-    metodo: "Bagna anche il palo di cocco, non solo il terriccio.",
-    consiglio: "Luce indiretta forte, mai sole diretto." },
-  "Monstera adansonii Mint (variegata)": { giorni: 9, concime: 24, miscela: "aroidee-terrestri", rinvaso: 18, sostegno: "palo-cocco",
-    spray: true, pulizia: true, rotazione: true, tipoAcqua: "rubinetto",
-    metodo: "Bagna anche il palo. La variegatura mint fa fotosintesi, quindi beve più di una variegata bianca.",
-    consiglio: "Luce indiretta forte: i settori chiari lavorano, ma il sole pieno li brucerebbe." },
-  "Alocasia": { giorni: 7, concime: 21, miscela: "aroidee-terrestri", rinvaso: 12, rotazione: true, spray: true, pulizia: true,
-    tipoAcqua: "rubinetto", metodo: "Abbondante fino al drenaggio, poi lascia asciugare i primi 3 cm.",
-    consiglio: "Luce forte e aria umida. Controlla il rovescio delle foglie: il ragnetto rosso è il suo nemico." },
-  "Alocasia amazonica (Polly)": { giorni: 6, concime: 21, miscela: "aroidee-terrestri", rinvaso: 12, rotazione: true, spray: true, pulizia: true,
-    tipoAcqua: "rubinetto", metodo: "Abbondante fino al drenaggio, poi svuota il sottovaso: non deve restare a mollo.",
-    consiglio: "Luce indiretta forte e umidità alta, lontano da spifferi e termosifoni." },
-  "Anthurium regale": { giorni: 6, concime: 14, miscela: "aroidee-epifite", rinvaso: 12, radicante: true, rotazione: true,
-    tipoAcqua: "demineralizzata", metodo: "Immersione: la corteccia respinge l'acqua versata dall'alto. Mai sulle foglie.",
-    consiglio: "Vuole il 70% di umidità: il bagno è l'unica stanza normale che ci arriva." },
-  "Anthurium warocqueanum": { giorni: 5, concime: 14, miscela: "aroidee-epifite", rinvaso: 12, radicante: true,
-    tipoAcqua: "demineralizzata", metodo: "Nebulizza lo sfagno finché è umido, mai fradicio.",
-    consiglio: "Umidità altissima: da piccola vive meglio in una serretta." },
-  "Howea forsteriana (kentia)": { giorni: 9, concime: 30, miscela: "palme", rinvaso: 36, rotazione: true, spray: true, pulizia: true,
-    tipoAcqua: "riposata una notte", metodo: "Abbondante fino al drenaggio, poi lascia asciugare i primi 3-4 cm.",
-    consiglio: "Tollera la luce scarsa meglio di quasi tutte, purché senza sole diretto." },
-  "Epipremnum aureum (pothos)": { giorni: 8, concime: 21, miscela: "facili", rinvaso: 18, sostegno: "palo-cocco",
-    spray: true, pulizia: true, rotazione: true, tipoAcqua: "rubinetto",
-    metodo: "A pioggia fino al drenaggio, poi svuota il sottovaso.",
-    consiglio: "In luce forte tiene la variegatura, in penombra torna verde." },
-  "Spathiphyllum (spatifillo)": { giorni: 5, concime: 21, miscela: "aroidee-terrestri", rinvaso: 18, rotazione: true, spray: true, pulizia: true,
-    tipoAcqua: "riposata una notte", metodo: "Abbondante fino al drenaggio. Non aspettare che si affloscia.",
-    consiglio: "Sopravvive in penombra, ma per fiorire servono due ore di luce indiretta forte." },
-  "Maranta leuconeura": { giorni: 4, concime: 21, miscela: "marantacee", rinvaso: 18, rotazione: true, spray: true,
-    tipoAcqua: "demineralizzata", metodo: "Immersione dal basso, terriccio sempre appena umido.",
-    consiglio: "Umidità alta e luce indiretta: il bagno è il posto naturale." },
-  "Calathea": { giorni: 5, concime: 21, miscela: "marantacee", rinvaso: 18, rotazione: true, spray: true,
-    tipoAcqua: "demineralizzata", metodo: "Immersione dal basso. Le punte secche vengono dal calcare, non dalla sete.",
-    consiglio: "Umidità alta, luce indiretta bassa, acqua senza calcare." },
-  "Fittonia albivenis": { giorni: 3, concime: 21, miscela: "felci", rinvaso: 15, rotazione: true, spray: true,
-    tipoAcqua: "demineralizzata", metodo: "Dal basso e poca alla volta: il terriccio deve restare appena umido, sempre.",
-    consiglio: "Umidità alta e luce indiretta bassa: sta bene accanto alle marantacee." },
-  "Chlorophytum (spider plant)": { giorni: 6, concime: 30, miscela: "facili", rinvaso: 12, rotazione: true, spray: true, pulizia: true,
-    tipoAcqua: "demineralizzata", metodo: "Abbondante fino al drenaggio, poi scola tutto.",
-    consiglio: "Vuole luce brillante, non umidità: non è una pianta da bagno buio." },
-  "Sansevieria (snake plant)": { giorni: 21, concime: 60, miscela: "sansevierie", rinvaso: 36,
-    tipoAcqua: "rubinetto", metodo: "Abbondante ma rarissimo, e mai nel cuore della rosetta.",
-    consiglio: "Indifferente alla luce scarsa. L'unico modo per ucciderla è annaffiarla troppo." },
-  "Sansevieria intrecciata": { giorni: 21, concime: 60, miscela: "sansevierie", rinvaso: 36,
-    tipoAcqua: "rubinetto", metodo: "Dal basso, così non ristagna dove le foglie si incrociano.",
-    consiglio: "Come la sansevieria normale, ma guarda il punto d'incrocio: è lì che marcisce." },
-  "Peperomia polybotrya (raindrop)": { giorni: 13, concime: 45, miscela: "peperomie", rinvaso: 30, rotazione: true,
-    tipoAcqua: "rubinetto", metodo: "Immersione dal basso, poi scola bene. Foglie asciutte.",
-    consiglio: "Luce indiretta. Stretta nel vaso va benissimo." },
-  "Peperomia obtusifolia": { giorni: 12, concime: 45, miscela: "peperomie", rinvaso: 30, rotazione: true,
-    tipoAcqua: "rubinetto", metodo: "Poca ma regolare, dal basso. Gli sbalzi le fanno cadere le foglie.",
-    consiglio: "Luce indiretta, lontano da correnti e sbalzi di temperatura." },
-  "Phlebodium aureum (felce blu)": { giorni: 6, concime: 30, miscela: "felci-epifite", rinvaso: 24, rotazione: true, spray: true,
-    tipoAcqua: "demineralizzata", metodo: "Bagna il substrato senza mai coprire il rizoma in superficie.",
-    consiglio: "Epifita: il rizoma peloso deve restare in superficie, mai interrato." },
-  "Felce": { giorni: 4, concime: 30, miscela: "felci", rinvaso: 18, rotazione: true, spray: true,
-    tipoAcqua: "demineralizzata", metodo: "Poca alla volta, ma il terriccio non deve mai asciugare del tutto.",
-    consiglio: "Vuole aria umida più che terra bagnata." },
-  "Felce rustica da esterno": { giorni: 4, concime: 30, miscela: "felci", rinvaso: 24,
-    tipoAcqua: "piovana", metodo: "Solo se il terriccio è asciutto in profondità: fuori ci pensa spesso la pioggia.",
-    consiglio: "Mezz'ombra all'aperto, riparata dal sole delle ore centrali e dal vento." },
-  "Hedera helix (edera)": { giorni: 6, concime: 30, miscela: "facili", rinvaso: 18, sostegno: "traliccio", spray: true,
-    tipoAcqua: "riposata una notte", metodo: "Regolare, senza mai lasciare il vaso a mollo.",
-    consiglio: "Fresco e luminoso. Si aggrappa solo a superfici ruvide: legno, corda, cocco." },
-  "Pilea peperomioides": { giorni: 8, concime: 28, miscela: "facili", rinvaso: 18, rotazione: true,
-    tipoAcqua: "rubinetto", metodo: "Abbondante fino al drenaggio, poi lascia asciugare i primi centimetri.",
-    consiglio: "Luce indiretta brillante, e ruotala ogni settimana o cresce storta." },
-  "Hypoestes (polka dot)": { giorni: 3, concime: 21, miscela: "facili", rinvaso: 12, rotazione: true,
-    tipoAcqua: "rubinetto", metodo: "Acqua nel sottovaso, mai sulle foglie.",
-    consiglio: "Luce brillante o perde le macchie rosa e si allunga." },
-  "Sedum nussbaumerianum": { giorni: 18, concime: 60, miscela: "grasse", rinvaso: 36, rotazione: true,
-    tipoAcqua: "rubinetto", metodo: "Abbondante ma rarissima, mai sulle rosette: l'acqua nel colletto le fa marcire.",
-    consiglio: "Più sole prende, più le foglie virano al rame. In ombra restano verdi e si allungano." },
-  "Philodendron": { giorni: 8, concime: 21, miscela: "aroidee-terrestri", rinvaso: 18, sostegno: "palo-cocco",
-    spray: true, pulizia: true, rotazione: true, tipoAcqua: "rubinetto",
-    metodo: "A pioggia fino al drenaggio, poi svuota il sottovaso.",
-    consiglio: "Luce indiretta, tollera la penombra." },
-  "Altro": { giorni: 7, concime: 28, miscela: "facili", rinvaso: 18, rotazione: true, tipoAcqua: "rubinetto",
-    metodo: "", consiglio: "" },
-};
-
-
 const PASSI_INTRO = [
   { ill: "deliciosa", t: "La colonna d'acqua", te: "The water column",
     d: "Ogni pianta ha una riserva che si svuota giorno dopo giorno. Piena vuol dire appena annaffiata, vuota vuol dire che tocca a lei. La striscia in cima è tutta la casa a colpo d'occhio.",
@@ -2195,65 +1489,10 @@ const PASSI_INTRO = [
     de: "Swipe a card right to water, left to open it. Every action can be undone, and \u201cLeave alone\u201d shows what's best not touched today." },
 ];
 
-
-const EN_PROFILI = {
-  "Monstera deliciosa": { metodo: "Slow soak until it runs from the hole, then empty the saucer.",
-    consiglio: "Bright indirect light: near a window, never on a sunny sill." },
-  "Monstera adansonii": { metodo: "Wet the coir pole too, not just the compost.",
-    consiglio: "Bright indirect light, never direct sun." },
-  "Monstera adansonii Mint (variegata)": { metodo: "Wet the pole too. Mint variegation photosynthesises, so it drinks more than a white variegate.",
-    consiglio: "Bright indirect light: the pale sectors work, but full sun would scorch them." },
-  "Alocasia": { metodo: "Soak until it drains, then let the top 3 cm dry.",
-    consiglio: "Strong light and humid air. Check the leaf undersides: spider mites are its enemy." },
-  "Alocasia amazonica (Polly)": { metodo: "Soak until it drains, then empty the saucer: it must not sit in water.",
-    consiglio: "Bright indirect light and high humidity, away from draughts and radiators." },
-  "Anthurium regale": { metodo: "Soak the pot: bark repels water poured from above. Never on the leaves.",
-    consiglio: "It wants 70% humidity: a bathroom is the only ordinary room that gets there." },
-  "Anthurium warocqueanum": { metodo: "Mist the sphagnum until damp, never soaking.",
-    consiglio: "Very high humidity: when small it does better in a propagator." },
-  "Howea forsteriana (kentia)": { metodo: "Soak until it drains, then let the top 3-4 cm dry.",
-    consiglio: "Takes low light better than almost any other, as long as there's no direct sun." },
-  "Epipremnum aureum (pothos)": { metodo: "Water until it drains, then empty the saucer.",
-    consiglio: "In strong light it keeps its variegation; in shade it turns green again." },
-  "Spathiphyllum (spatifillo)": { metodo: "Soak until it drains. Don't wait for it to flop.",
-    consiglio: "It survives in shade, but needs two hours of bright indirect light to flower." },
-  "Maranta leuconeura": { metodo: "Bottom watering, compost always just damp.",
-    consiglio: "High humidity and indirect light: a bathroom is its natural home." },
-  "Calathea": { metodo: "Bottom watering. Brown tips come from limescale, not thirst.",
-    consiglio: "High humidity, low indirect light, water without limescale." },
-  "Fittonia albivenis": { metodo: "From below and little at a time: the compost must stay just damp, always.",
-    consiglio: "High humidity and low indirect light: happy next to prayer plants." },
-  "Chlorophytum (spider plant)": { metodo: "Soak until it drains, then let it drain fully.",
-    consiglio: "It wants bright light, not humidity: it isn't a plant for a dark bathroom." },
-  "Sansevieria (snake plant)": { metodo: "Plenty but very rarely, and never into the heart of the rosette.",
-    consiglio: "Indifferent to low light. The only way to kill it is to overwater." },
-  "Sansevieria intrecciata": { metodo: "From below, so water doesn't pool where the leaves cross.",
-    consiglio: "Like a normal snake plant, but watch the crossing point: that's where rot starts." },
-  "Peperomia polybotrya (raindrop)": { metodo: "Bottom watering, then drain well. Keep the leaves dry.",
-    consiglio: "Indirect light. Being pot-bound suits it fine." },
-  "Peperomia obtusifolia": { metodo: "Little but regularly, from below. Swings make it drop leaves.",
-    consiglio: "Indirect light, away from draughts and temperature swings." },
-  "Phlebodium aureum (felce blu)": { metodo: "Water the mix without ever covering the rhizome on the surface.",
-    consiglio: "Epiphyte: the furry rhizome must stay on the surface, never buried." },
-  "Felce": { metodo: "Little at a time, but the compost must never dry out completely.",
-    consiglio: "It wants humid air more than wet soil." },
-  "Felce rustica da esterno": { metodo: "Only if the compost is dry deep down: outdoors the rain often does it for you.",
-    consiglio: "Partial shade outdoors, sheltered from midday sun and strong wind." },
-  "Hedera helix (edera)": { metodo: "Regular, never leaving the pot standing in water.",
-    consiglio: "Cool and bright. It only grips rough surfaces: wood, rope, coir." },
-  "Pilea peperomioides": { metodo: "Soak until it drains, then let the top few centimetres dry.",
-    consiglio: "Bright indirect light, and turn it weekly or it grows lopsided." },
-  "Hypoestes (polka dot)": { metodo: "Water into the saucer, never onto the leaves.",
-    consiglio: "Bright light or it loses the pink and stretches." },
-  "Sedum nussbaumerianum": { metodo: "Plenty but very rarely, never onto the rosettes: water in the crown rots them.",
-    consiglio: "The more sun it gets, the more the leaves turn copper. In shade they stay green and stretch." },
-  "Philodendron": { metodo: "Water until it drains, then empty the saucer.",
-    consiglio: "Indirect light, tolerates shade." },
-  "Altro": { metodo: "", consiglio: "" },
-};
+const TOLLERA_ASCIUTTO = ["sansevierie", "grasse", "peperomie", "facili", "aroidee-terrestri", "palme"];
 
 const CHIAVE = "cura-piante:v2";
-const CHIAVE_IO = "cura-piante:io";  
+const CHIAVE_IO = "cura-piante:io";   // nome e foto stanno a parte: la foto è pesante
 
 export default function CuraPiante() {
   const [piante, setPiante] = useState([]);
@@ -2309,11 +1548,13 @@ export default function CuraPiante() {
   const eranoRef = useRef([]);
   const contestoRef = useRef("");
   const [barraFerma, setBarraFerma] = useState(false);
+  const [giuDiMolto, setGiuDiMolto] = useState(false);
   const sondaRef = useRef(null);
   const [libretto, setLibretto] = useState(null);
   const [catProblema, setCatProblema] = useState("tutte");
   const [problemaSingolo, setProblemaSingolo] = useState(null);
   const [distintiviVisti, setDistintiviVisti] = useState(null);
+  const [prudenza, setPrudenza] = useState(0);
   const [nuoviDistintivi, setNuoviDistintivi] = useState([]);
   const [mostraMancanti, setMostraMancanti] = useState(false);
   const [diag, setDiag] = useState({ zona: null, sintomo: null, risposta: null });
@@ -2325,6 +1566,7 @@ export default function CuraPiante() {
       const n = barraRef.current;
       const sicuro = sondaRef.current?.offsetHeight || 0;
       if (n) setBarraFerma(n.getBoundingClientRect().top <= sicuro + 1);
+      setGiuDiMolto(window.scrollY > window.innerHeight * 1.8);
     };
     window.addEventListener("scroll", scorri, { passive: true });
     return () => window.removeEventListener("scroll", scorri);
@@ -2399,11 +1641,11 @@ export default function CuraPiante() {
       try {
         const r = await window.storage.get(CHIAVE);
         if (r?.value) stato = JSON.parse(r.value);
-      } catch { }
+      } catch { /* prima apertura */ }
       try {
         const r = await window.storage.get(CHIAVE_IO);
         if (r?.value) setIo(JSON.parse(r.value));
-      } catch { }
+      } catch { /* nessun profilo salvato */ }
       const CALCOLATI = ["intervallo", "restanti", "pieno", "stato", "cedimento", "fresca", "lato",
         "ritmo", "cresc", "cure", "messaggio", "conc", "tratt"];
       const normalizza = (grezzo) => {
@@ -2435,6 +1677,8 @@ export default function CuraPiante() {
           rinvaso: p.rinvaso !== undefined ? p.rinvaso : pr.rinvaso,
           ultimoRinvaso: p.ultimoRinvaso ?? null,
           vaso: p.vaso || "",
+        materiale: p.materiale || "plastica",
+        foro: p.foro !== undefined ? p.foro : true,
           sostegno: p.sostegno || pr.sostegno || "nessuno",
           altezzaPalo: p.altezzaPalo ?? "",
           altezzaPianta: p.altezzaPianta ?? "",
@@ -2459,6 +1703,7 @@ export default function CuraPiante() {
         setUsato(stato.usato || []);
         setStagioniProvate(stato.stagioniProvate || []);
         setDistintiviVisti(stato.distintiviVisti || null);
+        setPrudenza(stato.prudenza ?? 0);
         setTema(stato.tema || "sistema");
         setLingua(stato.lingua || (typeof navigator !== "undefined" && /^en/i.test(navigator.language || "") ? "en" : "it"));
         setTemiProvati(stato.temiProvati || []);
@@ -2536,7 +1781,11 @@ export default function CuraPiante() {
     () =>
       attive
         .map((p) => {
-          const intervallo = p.modo === "acqua" ? p.giorni : Math.max(1, Math.round(p.giorni * fattore));
+          const fVaso = p.modo === "acqua" ? 1 : (VASI[p.materiale]?.f ?? 1) * (p.foro === false ? 1.25 : 1);
+          const fMargine = p.modo !== "acqua" && prudenza > 0 && TOLLERA_ASCIUTTO.includes(p.miscela)
+            ? 1 + prudenza * 0.15 : 1;
+          const intervallo = p.modo === "acqua" ? p.giorni
+            : Math.max(1, Math.round(p.giorni * fattore * fVaso * fMargine));
           const restanti = intervallo - giorniDa(p.ultima);
           const base = {
             ...p, intervallo, restanti,
@@ -2597,7 +1846,6 @@ export default function CuraPiante() {
       (ps) => ps.map((q) => (q.id === id ? { ...q, foglie: [oggiStr(), ...(q.foglie || [])] } : q)));
   };
 
-  /*dajeroma. */
   const annullaAnnaffiatura = (id) => {
     const p = piante.find((x) => x.id === id);
     conAnnullo(`Annaffiatura tolta: ${p?.nome}`, (ps) => ps.map((q) => {
@@ -2723,7 +1971,7 @@ export default function CuraPiante() {
       if (q.id !== id) return q;
       const lista = [...(q[campo] || [])];
       const i = lista.indexOf(data);
-      if (i > -1) lista.splice(i, 1);   //toglie una sola occorrenza
+      if (i > -1) lista.splice(i, 1);   // toglie una sola occorrenza
       const resto = lista;
       return campo === "storico" ? { ...q, storico: resto, ultima: resto[0] || q.ultima } : { ...q, [campo]: resto };
     }));
@@ -2749,7 +1997,7 @@ export default function CuraPiante() {
     }));
 
   const vaiAllaScheda = (id) => {
-    if (vista === "grafici") setVista(vistaPiante);
+    if (vista !== vistaPiante) { setVista(vistaPiante); setDettaglio(id); return; }
     const p = calcolate.find((x) => x.id === id);
     if (p && filtro !== "tutte") {
       const inFiltro = filtro === "oggi" ? p.restanti <= 0 : p.tag === "cura" || p.tag === "ripresa";
@@ -2926,7 +2174,7 @@ export default function CuraPiante() {
   }, [visibili]);
 
   const grafici = useMemo(() => {
-    const eventi = new Map(); 
+    const eventi = new Map(); // data -> conteggi per tipo
     const somma = (d, tipo) => {
       if (!eventi.has(d)) eventi.set(d, { acqua: 0, concime: 0, foglie: 0, tratt: 0 });
       eventi.get(d)[tipo] += 1;
@@ -3088,7 +2336,7 @@ export default function CuraPiante() {
       stagioniProvate: stagioniProvate.length,
       estremi: ["piena", "riposo"].filter((k) => stagioniProvate.includes(k)).length,
       archiviate: piante.filter((q) => q.archiviata).length,
-      inCima: piante.filter((q) => q.altezzaPalo && q.altezzaPianta && Number(q.altezzaPianta) >= Number(q.altezzaPalo) - 12).length,
+      inCima: piante.filter((q) => q.altezzaPalo && q.altezzaPianta && Number(q.altezzaPianta) >= Number(q.altezzaPalo) * 0.88).length,
       neemCompletati: usato.filter((u) => u === "neem-finito").length,
       fogliaInCura: piante.filter((q) => q.tag === "cura" && (q.foglie || []).some((f) => giorniDa(f) <= 60)).length,
       maxGiornoTotale: giorni.length ? Math.max(...giorni.map((g) => g.acqua + g.foglie + g.concime + g.cure)) : 0,
@@ -3292,7 +2540,7 @@ export default function CuraPiante() {
   useEffect(() => {
     if (caricamento || !piante.length) return;
     const presi = DISTINTIVI.filter((b) => b.v(profilo.dati) >= b.m).map((b) => b.id);
-    if (distintiviVisti === null) { setDistintiviVisti(presi); return; }   // prima volta: nessun annuncio
+    if (!Array.isArray(distintiviVisti)) { setDistintiviVisti(presi); return; }   // prima volta: nessun annuncio
     const nuovi = presi.filter((id) => !distintiviVisti.includes(id));
     if (nuovi.length) {
       setNuoviDistintivi(nuovi.map((id) => DISTINTIVI.find((b) => b.id === id)).filter(Boolean));
@@ -3391,7 +2639,6 @@ export default function CuraPiante() {
     </button>
   );
 
-  /* wewe proietta ina vanti qua. */
   const pianoLibretto = (da, a) => {
     const inizio = parseData(da), fine = parseData(a);
     const giorni = new Map();
@@ -3670,6 +2917,11 @@ export default function CuraPiante() {
       
       <span ref={sondaRef} className="cp-sonda" aria-hidden="true" />
       <div className={`cp-fascia ${barraFerma ? "viva" : ""}`} aria-hidden="true" />
+      {giuDiMolto && (
+        <button className="cp-su" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          aria-label={lingua === "en" ? "Back to top" : "Torna in cima"}
+          title={lingua === "en" ? "Back to top" : "Torna in cima"}>↑</button>
+      )}
       <div className={`cp-wrap ${testaRidotta && !["grafici", "terricci", "profilo", "acqua", "problemi"].includes(vista) ? "ridotta" : ""}`}>
         <p className="cp-eyebrow">{new Date().toLocaleDateString(LOCALE, { weekday: "long", day: "numeric", month: "long" })}</p>
         <h1 className="cp-titolo">{titolo()}</h1>
@@ -4126,7 +3378,7 @@ export default function CuraPiante() {
                 const anno = oggi.getFullYear(), mese = oggi.getMonth();
                 const primo = new Date(anno, mese, 1);
                 const giorniMese = new Date(anno, mese + 1, 0).getDate();
-                const vuoti = (primo.getDay() + 6) % 7;                 
+                const vuoti = (primo.getDay() + 6) % 7;                 // la settimana comincia di lunedì
                 const iniziali = lingua === "en"
                   ? ["M", "T", "W", "T", "F", "S", "S"]
                   : ["L", "M", "M", "G", "V", "S", "D"];
@@ -4918,6 +4170,25 @@ export default function CuraPiante() {
             </div>
 
             <div className="cp-campo">
+              <label>{lingua === "en" ? "Margin on watering" : "Margine sull'acqua"}</label>
+              <div className="cp-filtri" style={{ width: "fit-content" }}>
+                {[[0, lingua === "en" ? "None" : "Nessuno"], [1, lingua === "en" ? "Some" : "Un po'"],
+                  [2, lingua === "en" ? "Generous" : "Ampio"]].map(([k, et]) => (
+                  <button key={k} aria-pressed={prudenza === k} onClick={() => setPrudenza(k)}>{et}</button>
+                ))}
+              </div>
+              <p className="cp-aiuto">
+                {prudenza === 0
+                  ? (lingua === "en"
+                    ? "Intervals as calculated. Most houseplants die drowned, not thirsty: a margin costs you nothing and protects the roots."
+                    : "Intervalli come calcolati. Quasi tutte le piante d'appartamento muoiono annegate, non assetate: un margine non costa niente e protegge le radici.")
+                  : (lingua === "en"
+                    ? `Adds ${prudenza * 15}% to the interval — only for plants that take drying without harm. Prayer plants, ferns, fittonia and anthuriums are left alone.`
+                    : `Aggiunge il ${prudenza * 15}% all'intervallo, ma solo alle piante che reggono di asciugare. Marantacee, felci, fittonia e anthurium restano come sono.`)}
+              </p>
+            </div>
+
+            <div className="cp-campo">
               <label>{L("Se parti")}</label>
               <button className="cp-btn cp-btn-ghost" onClick={() => {
                 const a = new Date(); a.setDate(a.getDate() + 14);
@@ -5113,6 +4384,15 @@ export default function CuraPiante() {
                 <label htmlFor="mi">{L("Substrato")}</label>
                 <select id="mi" value={form.miscela || "facili"} onChange={(e) => setForm({ ...form, miscela: e.target.value })}>
                   {Object.entries(MISCELE).map(([k, m]) => <option key={k} value={k}>{m.titolo}</option>)}
+                </select>
+              </div>
+              <div className="cp-campo">
+                <label htmlFor="ma">{L("Materiale del vaso")}</label>
+                <select id="ma" value={form.materiale || "plastica"}
+                  onChange={(e) => setForm({ ...form, materiale: e.target.value })}>
+                  {Object.entries(VASI).map(([k, v]) => (
+                    <option key={k} value={k}>{lingua === "en" ? v.te : v.t}</option>
+                  ))}
                 </select>
               </div>
               <div className="cp-campo">
