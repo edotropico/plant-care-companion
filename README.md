@@ -31,6 +31,7 @@ Data is stored in the browser's `localStorage` under the `cura-piante:v2` key. N
 
 ## Structure
 
+```
 .
 ├── index.html          single page: PWA metadata, shell, splash screen
 ├── manifest.json       name, icons, colors, full screen mode
@@ -47,6 +48,7 @@ Data is stored in the browser's `localStorage` under the `cura-piante:v2` key. N
     ├── icon-512.png    large icon, maskable version included
     ├── apple-touch-icon-180.png
     └── splash/         splash screens for iOS devices
+```
 
 ## Development
 
@@ -79,4 +81,4 @@ If this application assists in maintaining your plants, consider supporting its 
 
 ---
 
-Developed by **Edoardo Giangrandi** (edotropico).
+Developed by **edotropico**
